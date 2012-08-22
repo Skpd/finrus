@@ -70,6 +70,9 @@ $(document).ready(function(){
                 'Закрыть': function() {
                     $(this).dialog('close');
                 }
+            },
+            close: function() {
+                $(this).remove();
             }
         });
 
