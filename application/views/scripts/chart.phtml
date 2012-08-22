@@ -1,0 +1,136 @@
+<script src="<?=$this->baseUrl()?>/js/amcharts/amcharts.js" type="text/javascript"></script>
+<script src="<?=$this->baseUrl()?>/js/amcharts/raphael.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var chart;
+
+    $(document).ready(function () {
+        $('.report-link').click(function() {
+            var period = $(this).attr('period') || 7;
+
+            if (period == 7) {
+                data = <?=$this->action('report', 'index', 'default', array('period' => 7 ))?>;
+            } else if (period == 30) {
+                data = <?=$this->action('report', 'index', 'default', array('period' => 30 ))?>;
+            } else if (period == 365) {
+                data = <?=$this->action('report', 'index', 'default', array('period' => 365 ))?>;
+            }
+
+            chart.dataProvider = data;
+
+            chart.validateData();
+        });
+    });
+
+    AmCharts.ready(function () {
+        // SERIAL CHART
+        chart = new AmCharts.AmSerialChart();
+        chart.dataProvider = <?=$this->action('report', 'index', 'default', array('period' => '7'))?>;
+        chart.categoryField = "date";
+        chart.marginTop = 0;
+
+        // AXES
+        // category axis
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
+        categoryAxis.minPeriod = "DD"; // our data is daily, so we set minPeriod to DD
+        categoryAxis.autoGridCount = false;
+        categoryAxis.gridCount = 50;
+        categoryAxis.gridAlpha = 0;
+        categoryAxis.gridColor = "#000000";
+        categoryAxis.axisColor = "#555555";
+
+
+        // as we have data of different units, we create two different value axes
+        // opened_sum value axis
+        var opened_sumAxis = new AmCharts.ValueAxis();
+        opened_sumAxis.title = "Руб";
+        opened_sumAxis.gridAlpha = 0;
+        opened_sumAxis.axisAlpha = 1;
+        opened_sumAxis.inside = false;
+        chart.addValueAxis(opened_sumAxis);
+
+        // credit_opened value axis
+        var credit_openedAxis = new AmCharts.ValueAxis();
+        credit_openedAxis.title = "Человек";
+        credit_openedAxis.gridAlpha = 0;
+        credit_openedAxis.position = "right";
+        credit_openedAxis.inside = false;
+        credit_openedAxis.axisAlpha = 1;
+        chart.addValueAxis(credit_openedAxis);
+
+        // GRAPHS
+        // opened_sum graph
+        var opened_sumGraph = new AmCharts.AmGraph();
+        opened_sumGraph.title = "Сумма взятых кредитов";
+        opened_sumGraph.valueField = "opened_sum";
+        opened_sumGraph.type = "line";
+        opened_sumGraph.valueAxis = opened_sumAxis; // indicate which axis should be used
+        opened_sumGraph.lineColor = "#BB0000";
+        opened_sumGraph.balloonText = "[[value]] руб.";
+        opened_sumGraph.lineThickness = 1;
+        opened_sumGraph.legendValueText = "[[value]] руб.";
+        opened_sumGraph.bullet = "square";
+        chart.addGraph(opened_sumGraph);
+
+        var opened_sumGraph2 = new AmCharts.AmGraph();
+        opened_sumGraph2.title = "Сумма возвращенных кредитов";
+        opened_sumGraph2.valueField = "returned_sum";
+        opened_sumGraph2.type = "line";
+        opened_sumGraph2.valueAxis = opened_sumAxis; // indicate which axis should be used
+        opened_sumGraph2.lineColor = "#00BB00";
+        opened_sumGraph2.balloonText = "[[value]] руб.";
+        opened_sumGraph2.lineThickness = 1;
+        opened_sumGraph2.legendValueText = "[[value]] руб.";
+        opened_sumGraph2.bullet = "square";
+        chart.addGraph(opened_sumGraph2);
+
+        // credit_opened graph
+        var credit_openedGraph = new AmCharts.AmGraph();
+        credit_openedGraph.valueField = "credit_opened";
+        credit_openedGraph.title = "Кол-во взявших кредит";
+        credit_openedGraph.type = "column";
+        credit_openedGraph.fillAlphas = 0.7;
+        credit_openedGraph.valueAxis = credit_openedAxis; // indicate which axis should be used
+        credit_openedGraph.balloonText = "[[value]]";
+        credit_openedGraph.legendValueText = "[[value]]";
+        credit_openedGraph.lineColor = "#333333";
+        chart.addGraph(credit_openedGraph);
+
+        var credit_openedGraph2 = new AmCharts.AmGraph();
+        credit_openedGraph2.valueField = "credit_returned";
+        credit_openedGraph2.title = "Кол-во вернувших кредит";
+        credit_openedGraph2.type = "column";
+        credit_openedGraph2.fillAlphas = 0.7;
+        credit_openedGraph2.valueAxis = credit_openedAxis; // indicate which axis should be used
+        credit_openedGraph2.balloonText = "[[value]]";
+        credit_openedGraph2.legendValueText = "[[value]]";
+        credit_openedGraph2.lineColor = "#aaaaaa";
+        chart.addGraph(credit_openedGraph2);
+
+        // CURSOR
+        var chartCursor = new AmCharts.ChartCursor();
+        chartCursor.zoomable = true;
+        chartCursor.cursorAlpha = 0;
+        chart.addChartCursor(chartCursor);
+
+        // LEGEND
+        var legend = new AmCharts.AmLegend();
+        legend.bulletType = "round";
+        legend.equalWidths = true;
+        legend.valueWidth = 120;
+        legend.color = "#000000";
+        chart.addLegend(legend);
+
+        // WRITE
+        chart.write("chartdiv")
+    });
+</script>
+
+<div class="center">
+    <a period=7 href="javascript:void(0)" class="default-button report-link">Неделя</a>
+    <a period=30 href="javascript:void(0)" class="default-button report-link">Месяц</a>
+    <a period=365 href="javascript:void(0)" class="default-button report-link">Год</a>
+</div>
+
+<div id="chartdiv" style="width:100%; height:400px;"></div>

@@ -1,0 +1,47 @@
+<?=$this->searchForm?>
+
+<table class="default-table ui-state-default">
+    <thead>
+        <tr>
+            <th class="ui-widget-header">#</th>
+            <th class="ui-widget-header">№ Кредита</th>
+            <th class="ui-widget-header sortable" field="amount">Сумма</th>
+            <th class="ui-widget-header">Оператор</th>
+            <th class="ui-widget-header sortable" field="date">Дата</th>
+            <th class="ui-widget-header">Действия</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="6" class="ui-widget-content">
+                <?=$this->paginationControl($this->data,
+                    'Sliding',
+                    'paging.phtml');
+                ?>
+            </td>
+        </tr>
+    </tfoot>
+    <tbody>
+        <? if (sizeof($this->data) > 0): ?>
+            <? foreach($this->data as $k => $value): ?>
+                <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
+                    <td class="ui-widget-content"><?=$value['id']?></td>
+                    <td class="ui-widget-content"><?=$value['credit_id']?></td>
+                    <td class="ui-widget-content"><?=$value['amount']?></td>
+                    <td class="ui-widget-content"><?=$value['login']?></td>
+                    <td class="ui-widget-content"><?=$value['date']?></td>
+                    <td class="ui-widget-content">
+                        Скачать
+                        <a href="<?=$this->url(array('controller' => 'payment', 'action' => 'print', 'id' => $value['id']), 'default', true)?>">Чек</a>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        <? else: ?>
+            <tr class="ui-widget odd">
+                <td colspan="6" class="ui-widget-content"> no data. </td>
+            </tr>
+        <? endif; ?>
+    </tbody>
+</table>
+
+<?=$this->render('buttons.phtml')?>

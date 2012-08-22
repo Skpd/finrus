@@ -1,0 +1,19 @@
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#client_id').flexbox('<?=$this->baseUrl()?>/search/client', {
+        method: 'POST',
+        contentClass: 'fbcontent',
+        showArrow: false
+    });
+    <? if (!empty($this->redirect)): ?>
+
+        window.open('<?=$this->url(array('controller' => 'credit', 'action' => 'print', 'id' => $this->credit_id), 'default', true)?>', 'paymentPrint');
+        window.open('<?=$this->url(array('controller' => 'credit', 'action' => 'agreement', 'id' => $this->credit_id), 'default', true)?>', 'agreementPrint');
+
+        document.location.href = '<?=$this->url(array('controller' => 'index', 'action' => 'index'), 'default', true)?>';
+
+    <? endif; ?>
+});
+</script>
+<div>Клиент:</div>
+<?=$this->form?>

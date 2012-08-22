@@ -1,0 +1,61 @@
+<?=$this->searchForm?>
+
+<table class="default-table ui-state-default">
+    <thead>
+        <tr>
+            <th class="ui-widget-header">#</th>
+            <th class="ui-widget-header sortable" field="first_name">Имя</th>
+            <th class="ui-widget-header sortable" field="last_name">Фамилия</th>
+            <th class="ui-widget-header sortable" field="middle_name">Отчество</th>
+            <th class="ui-widget-header sortable" field="passport">№ Паспорта</th>
+            <th class="ui-widget-header">Город</th>
+            <th class="ui-widget-header">Телефон</th>
+            <th class="ui-widget-header">Адрес</th>
+            <th class="ui-widget-header sortable" field="created_date">Зарегистрирован</th>
+            <th class="ui-widget-header">Действия</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="11" class="ui-widget-content">
+                <?=$this->paginationControl($this->data,
+                    'Sliding',
+                    'paging.phtml');
+                ?>
+            </td>
+        </tr>
+    </tfoot>
+    <tbody>
+        <? if (!empty($this->data)): ?>
+            <? foreach($this->data as $k => $value): ?>
+                <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
+                    <td class="ui-widget-content"><?=$value['id']?></td>
+                    <td class="ui-widget-content"><?=$value['first_name']?></td>
+                    <td class="ui-widget-content"><?=$value['last_name']?></td>
+                    <td class="ui-widget-content"><?=$value['middle_name']?></td>
+                    <td class="ui-widget-content"><?=$value['passport']?></td>
+                    <td class="ui-widget-content"><?=$this->cities[$value['city_id']]?></td>
+                    <td class="ui-widget-content"><?=$value['phone']?></td>
+                    <td class="ui-widget-content"><?=$value['address']?></td>
+                    <td class="ui-widget-content"><?=$value['created_date']?></td>
+                    <td class="ui-widget-content">
+                        <? if (!empty($value['passport_img'])): ?>
+                            <a class="balloon-image-link" href="<?=$this->baseUrl()?>/img/<?=$value['passport_img']?>">
+                        <? endif; ?>
+                        Паспорт
+                        <? if (!empty($value['passport_img'])): ?>
+                            </a>
+                        <? endif; ?>
+                    </td>
+
+                </tr>
+            <? endforeach; ?>
+        <? else: ?>
+            <tr class="ui-widget odd">
+                <td colspan="11" class="ui-widget-content"> no data. </td>
+            </tr>
+        <? endif; ?>
+    </tbody>
+</table>
+
+<?=$this->render('buttons.phtml')?>

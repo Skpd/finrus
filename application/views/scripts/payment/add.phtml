@@ -1,0 +1,39 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#client_id').flexbox('<?=$this->baseUrl()?>/search/client', {
+        method: 'POST',
+        contentClass: 'fbcontent',
+        showArrow: true,
+        onSelect: function() {
+            $.ajax({
+                url: '<?=$this->url(array('controller' => 'credit', 'action' => 'get-active'), 'default', true)?>/id/' + $('#client_id_hidden').val(),
+                dataType: 'json',
+                success: function(resp) {
+                    var text = [];
+                    if (resp.credit.length > 0) {
+                        for (var i = 0; i < resp.credit.length; i++) {
+                            text.push(
+                                'Дата открытия: ' + resp.credit[i].opening_date.split(' ')[0] +
+                                '. Остаток ' + resp.credit[i].remain + ' руб.'
+                            );
+                        }
+                    } else {
+                        text.push('Активный кредит не найден.');
+                    }
+
+                    $('#text').html(text.join('<br />'));
+                }
+            });
+        }
+    });
+    <? if (!empty($this->redirect)): ?>
+
+        window.open('<?=$this->url(array('controller' => 'payment', 'action' => 'print', 'id' => $this->payment_id), 'default', true)?>', 'paymentPrint');
+        document.location.href = '<?=$this->url(array('controller' => 'index', 'action' => 'index'), 'default', true)?>';
+
+    <? endif; ?>
+});
+</script>
+<div>Клиент:</div>
+<div id="text"></div>
+<?=$this->form?>

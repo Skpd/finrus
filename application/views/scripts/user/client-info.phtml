@@ -1,0 +1,53 @@
+<? if ($this->isBlacklisted): ?>
+    <div class="ui-state-error center bold ui-corner-all" style="padding: 5px;margin-bottom: 15px">Занесён в черный список!</div>
+<? endif; ?>
+
+<table class="default-table" style="margin-bottom: 15px;">
+    <caption class="bold"><?=$this->client['last_name']?> <?=$this->client['first_name']?> <?=$this->client['middle_name']?></caption>
+    <tbody>
+    <tr>
+        <td>Телефон:</td>
+        <td><?=$this->client['phone']?></td>
+    </tr>
+    <tr>
+        <td>Паспорт:</td>
+        <td><?=$this->client['passport']?></td>
+    </tr>
+    <tr>
+        <td>Адрес:</td>
+        <td><?=$this->client['address']?></td>
+    </tr>
+    </tbody>
+</table>
+
+<table class="default-table" style="margin-bottom: 15px;">
+    <caption class="bold">Кредиты</caption>
+
+    <thead style="border: none;">
+    <tr>
+        <td>Открыт</td>
+        <td>Сумма</td>
+        <td>Закрыт</td>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <? foreach($this->credits as $credit): ?>
+        <tr>
+            <td><?=$credit['opening_date']?></td>
+            <td><?=$credit['amount']?></td>
+            <td><?=$credit['closing_date']?></td>
+        </tr>
+    <? endforeach; ?>
+    </tbody>
+</table>
+
+<div>
+    <label><input type="checkbox" id="backlist-status" name="status" <?=$this->isBlacklisted ? 'checked="checked"' : ''?>> Черный список</label>
+</div>
+
+<script type="text/javascript">
+    $('#backlist-status').change(function() {
+        $.post('<?=$this->baseUrl()?>/blacklist/change', {id: '<?=$this->client['id']?>', status: $(this).prop('checked')});
+    });
+</script>

@@ -1,0 +1,139 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#affiliateDialog, #cityDialog').dialog({
+            resizable: false,
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                save: {
+                    text: 'Сохранить',
+                    click: function() {
+                        var url = $(this).data('url'), dialog = $(this);
+
+                        $.ajax({
+                            url: url,
+                            data: $('input, select', dialog).serialize(),
+                            type: 'POST',
+                            success: function(resp) {
+                                $(this).dialog('close');
+                                document.location.href = document.location.href;
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: 'Отмена',
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            }
+        });
+
+        $('#cityCreate').click(function() {
+            $('#cityDialog').data('url', $(this).attr('href'));
+            $('#cityDialog').dialog('open');
+            return false;
+        });
+
+        $('#affiliateCreate').click(function() {
+            $('#affiliateDialog').data('url', $(this).attr('href'));
+            $('#affiliateDialog').dialog('open');
+            return false;
+        });
+
+        $('.cityEdit').click(function() {
+
+            var row = $(this).parents('tr');
+
+            $('#cityDialog #name').val($('td[field=name]', row).attr('value'));
+
+            $('#cityDialog').data('url', $(this).attr('href'));
+            $('#cityDialog').dialog('open');
+            return false;
+        });
+
+        $('.affiliateEdit').click(function() {
+
+            var row = $(this).parents('tr');
+
+            $('#affiliateDialog #name').val($('td[field=name]', row).attr('value'));
+            $('#affiliateDialog #city_id').val($('td[field=city]', row).attr('value'));
+
+            $('#affiliateDialog').data('url', $(this).attr('href'));
+            $('#affiliateDialog').dialog('open');
+            return false;
+        });
+    });
+</script>
+<div class="center">
+<h2>Филиалы:</h2>
+<table class="default-table ui-state-default" style="width: 40%; margin: 0 auto;">
+    <thead>
+        <tr>
+            <th class="ui-widget-header">#</th>
+            <th class="ui-widget-header">Имя</th>
+            <th class="ui-widget-header">Город</th>
+            <th class="ui-widget-header">Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <? if (!empty($this->affiliates)): ?>
+            <? foreach($this->affiliates as $k => $value): ?>
+                <tr id="city-<?=$value['id']?>" class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
+                    <td class="ui-widget-content"><?=$value['id']?></td>
+                    <td field="name" value="<?=$value['name']?>" class="ui-widget-content"><?=$value['name']?></td>
+                    <td field="city" value="<?=$value['city_id']?>" class="ui-widget-content"><?=$this->cities[$value['city_id']]['name']?></td>
+                    <td>
+                        <a class="affiliateEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'affiliate'), 'default', true)?>">Редактировать</a>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        <? else: ?>
+            <tr class="ui-widget odd">
+                <td colspan="3" class="ui-widget-content"> no data. </td>
+            </tr>
+        <? endif; ?>
+    </tbody>
+</table>
+
+<a id="affiliateCreate" style="margin: 15px 0;" href="<?=$this->url(array('controller' => 'settings', 'action' => 'create', 'type' => 'affiliate'), 'default')?>" class="default-button">Создать</a>
+
+<div id="affiliateDialog">
+    <?=$this->affiliateForm?>
+</div>
+
+<h2>Города:</h2>
+<table class="default-table ui-state-default" style="width: 40%; margin: 0 auto;">
+    <thead>
+        <tr>
+            <th class="ui-widget-header">#</th>
+            <th class="ui-widget-header">Имя</th>
+            <th class="ui-widget-header">Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <? if (!empty($this->cities)): ?>
+            <? foreach($this->cities as $k => $value): ?>
+                <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
+                    <td field="name" value="<?=$value['name']?>" class="ui-widget-content"><?=$value['id']?></td>
+                    <td class="ui-widget-content"><?=$value['name']?></td>
+                    <td>
+                        <a class="cityEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'city'), 'default', true)?>">Редактировать</a>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        <? else: ?>
+            <tr class="ui-widget odd">
+                <td colspan="3" class="ui-widget-content"> no data. </td>
+            </tr>
+        <? endif; ?>
+    </tbody>
+</table>
+
+<a id="cityCreate" style="margin: 15px 0;" href="<?=$this->url(array('controller' => 'settings', 'action' => 'create', 'type' => 'city'), 'default')?>" class="default-button">Создать</a>
+
+<div id="cityDialog">
+    <?=$this->cityForm?>
+</div>
+</div>

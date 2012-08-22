@@ -1,0 +1,166 @@
+input.ui-button {
+    padding: 0 1em;
+}
+
+html, body {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 0.96em;
+    background-color: #f5f5f5;
+}
+
+.wrapper {
+    min-width: 960px;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-left: 1px solid #e7e7e7;
+    border-right: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.header {
+    height: 200px;
+    width: 100%;
+    background: #ffffff url("images/logo.png") no-repeat scroll left center;
+}
+
+.footer {
+    height: 80px;
+    width: 100%;
+}
+
+form {
+    display: inline-block;
+}
+
+.default-form dd {
+    padding: 5px 0;
+}
+
+/*
+.default-form dt, .default-form dd {
+    display: inline-block;
+}
+*/
+
+.default-form .errors {
+    color: #C00;
+}
+
+.form-errors {
+
+}
+
+.content {
+    padding: 10px 15px;
+}
+
+.default-table {
+    width: 100%;
+    text-align: center;
+    border: none;
+}
+
+.default-table td {
+    vertical-align: top;
+    padding: 3px;
+}
+
+.default-table thead {
+    border: 1px solid #E3A1A1;
+}
+
+.default-table .ui-widget-header {
+    border: none;
+    text-align: center;
+}
+
+.default-table .ui-widget .ui-widget-content {
+    background:inherit;
+    border: none;
+    font-size: 0.86em;
+}
+
+.default-table .ui-widget.even .ui-widget-content {
+    background:inherit;
+    border: none;
+}
+
+.default-table .ui-icon {
+    margin-left: .3em;
+    display: inline-block;
+    margin-bottom: -2px;
+}
+
+ul.navigation {
+    margin-left: 420px;
+}
+
+ul.navigation li {
+    display: inline-block;
+    padding: 5px;
+}
+
+ul.navigation li a {
+    width: 180px;
+}
+
+.bold {
+    font-weight: bolder;
+}
+
+.center {
+    text-align: center;
+}
+
+.fl-right {
+    float: right;
+}
+
+.fl-left {
+    float: left;
+}
+
+.notifications {
+    margin: 0 auto 15px;
+    width: 700px;
+}
+
+.notifications li {
+    padding: 5px;
+}
+
+.notifications li .text {
+    margin-top: 7px;
+    float: left;
+    width: 620px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
+.balloon-image-link {
+    border-bottom: 1px dashed;
+    position: relative;
+}
+
+.balloon-image {
+    display: none;
+    position: absolute;
+}
+
+.ffb-arrow {
+    margin: 10px 0 10px 3px;
+    cursor: pointer;
+}
+
+.ffb-input {
+    margin: 10px 0;
+}
+
+.ffb {
+    margin-top: 10px;
+}

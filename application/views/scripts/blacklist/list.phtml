@@ -1,0 +1,38 @@
+<?=$this->searchForm?>
+
+<table class="default-table ui-state-default">
+    <thead>
+        <tr>
+            <th class="ui-widget-header">#</th>
+            <th class="ui-widget-header sortable" field="client_id">Клиент</th>
+            <th class="ui-widget-header sortable" field="return_date">Дата возврата</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="11" class="ui-widget-content">
+                <?=$this->paginationControl($this->data,
+                    'Sliding',
+                    'paging.phtml');
+                ?>
+            </td>
+        </tr>
+    </tfoot>
+    <tbody>
+        <? if (!empty($this->data)): ?>
+            <? foreach($this->data as $k => $value): ?>
+                <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
+                    <td class="ui-widget-content"><?=$value['id']?></td>
+                    <td class="ui-widget-content"><?=$value['last_name']?> <?=$value['first_name']?></td>
+                    <td class="ui-widget-content"><?=$value['return_date'] == null ? 'Не вернул' : $value['return_date']?></td>
+                </tr>
+            <? endforeach; ?>
+        <? else: ?>
+            <tr class="ui-widget odd">
+                <td colspan="11" class="ui-widget-content"> no data. </td>
+            </tr>
+        <? endif; ?>
+    </tbody>
+</table>
+
+<?=$this->render('buttons.phtml')?>

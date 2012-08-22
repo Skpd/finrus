@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?=$this->headTitle()?>
+
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" href="<?=$this->baseUrl() ?>/css/reset.css" type="text/css" media="screen"/>
+    <link href="<?=$this->baseUrl() ?>/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+    <link href="<?=$this->baseUrl() ?>/css/jquery.flexbox.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?=$this->baseUrl() ?>/css/common.css" type="text/css" media="screen"/>
+    <?=$this->headLink() ?>
+
+    <script src="<?=$this->baseUrl() ?>/js/jquery-1.6.2.min.js"></script>
+    <script src="<?=$this->baseUrl() ?>/js/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="<?=$this->baseUrl() ?>/js/jquery.flexbox.js"></script>
+
+    <script>var baseUrl = '<?=$this->baseUrl()?>';</script>
+
+    <script src="<?=$this->baseUrl() ?>/js/common.js"></script>
+
+    <?=$this->headScript() ?>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header"><?=$this->navigation()->menu($this->menu)?></div>
+
+    <div class="content"><?=$this->layout()->content;?></div>
+
+    <div class="footer"></div>
+</div>
+
+</body>
+</html>

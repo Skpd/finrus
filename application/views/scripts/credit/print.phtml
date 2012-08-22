@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <?=$this->headTitle()?>
+
+    <style>
+        <!--
+        select {font-size:12px;}
+        A:link {text-decoration: none; color: blue}
+        A:visited {text-decoration: none; color: purple}
+        A:active {text-decoration: red}
+        A:hover {text-decoration: underline; color:red}
+        -->
+    </style>
+    <style type="text/css">
+        <!--
+        .ft0{font-style:normal;font-weight:normal;font-size:9px;font-family:Times New Roman;color:#000000;}
+        .ft1{font-style:normal;font-weight:bold;font-size:9px;font-family:Times New Roman;color:#000000;}
+        .ft2{font-style:normal;font-weight:normal;font-size:10px;font-family:Times New Roman;color:#000000;}
+        .ft3{font-style:normal;font-weight:bold;font-size:13px;font-family:Times New Roman;color:#000000;}
+        .ft4{font-style:normal;font-weight:normal;font-size:8px;font-family:Times New Roman;color:#000000;}
+        -->
+    </style>
+</head>
+<body vlink="#FFFFFF" link="#FFFFFF" bgcolor="#ffffff">
+<div style="position:absolute;top:0;left:0"><img width="827" height="1169" src="<?=$this->baseUrl()?>/img/pg_0002.jpg" ALT=""></div>
+<div style="position:absolute;top:21;left:500"><span class="ft0">Подготовлено с использованием системы КонсультантПлюс</span></div>
+<div style="position:absolute;top:49;left:447"><span class="ft2">Унифицированная форма № КО-2</span></div>
+<div style="position:absolute;top:62;left:447"><span class="ft2">Утверждена постановлением Госкомстата России от 18.08.98 № 88</span></div>
+<div style="position:absolute;top:96;left:562"><span class="ft2">Форма по ОКУД</span></div>
+<div style="position:absolute;top:110;left:595"><span class="ft2">по ОКПО</span></div>
+<div style="position:absolute;top:170;left:252"><span class="ft3">РАСХОДНЫЙ КАССОВЫЙ ОРДЕР</span></div>
+<div style="position:absolute;top:265;left:42"><span class="ft2">Выдать</span></div>
+<div style="position:absolute;top:265;left:393"><span class="ft2"><?=$this->client['last_name'] . ' ' . $this->client['first_name'] . ' ' . $this->client['middle_name']?></span></div>
+<div style="position:absolute;top:290;left:42"><span class="ft2">Основание:</span></div>
+<div style="position:absolute;top:304;left:42"><span class="ft2">Сумма</span></div>
+<div style="position:absolute;top:328;left:700"><span class="ft2"> <?=strpos($this->credit['origin_amount'], '.') === false ? '00' : str_pad(substr($this->credit['origin_amount'], strpos($this->credit['origin_amount'], '.') + 1), 2, '0', STR_PAD_LEFT)?> </span></div>
+<div style="position:absolute;top:328;left:732"><span class="ft2">  коп.</span></div>
+<div style="position:absolute;top:343;left:42"><span class="ft2">Приложение</span></div>
+<div style="position:absolute;top:372;left:42"><span class="ft2">Руководитель организации</span></div>
+<div style="position:absolute;top:394;left:42"><span class="ft2">Главный бухгалтер</span></div>
+<div style="position:absolute;top:418;left:42"><span class="ft2">Получил</span></div>
+<div style="position:absolute;top:418;left:393"><span class="ft2"> <?=Finrus_Utils::num2str($this->credit['origin_amount'])?> </span></div>
+<div style="position:absolute;top:441;left:393"><span class="ft2"> <?=intval($this->credit['origin_amount'])?> </span></div>
+<div style="position:absolute;top:441;left:700"><span class="ft2"> <?=strpos($this->credit['origin_amount'], '.') === false ? '00' : str_pad(substr($this->credit['origin_amount'], strpos($this->credit['origin_amount'], '.') + 1), 2, '0', STR_PAD_LEFT)?> </span></div>
+<div style="position:absolute;top:441;left:732"><span class="ft2">  коп.</span></div>
+<div style="position:absolute;top:456;left:42"><span class="ft2">&quot; &quot;</span></div>
+<div style="position:absolute;top:455;left:263"><span class="ft2">  г.</span></div>
+<div style="position:absolute;top:455;left:371"><span class="ft2"> Подпись</span></div>
+<div style="position:absolute;top:470;left:42"><span class="ft2">По</span></div>
+<div style="position:absolute;top:516;left:42"><span class="ft2">Выдал кассир</span></div>
+<div style="position:absolute;top:278;left:379"><span class="ft4"> (фамилия, имя, отчество)</span></div>
+<div style="position:absolute;top:209;left:368"><span class="ft2">код аналитического</span></div>
+<div style="position:absolute;top:224;left:401"><span class="ft2">учета</span></div>
+<div style="position:absolute;top:80;left:699"><span class="ft2"> Код</span></div>
+<div style="position:absolute;top:96;left:690"><span class="ft2">0310002</span></div>
+<div style="position:absolute;top:110;left:267"><span class="ft2">ООО &quot;Фин Русь&quot;</span></div>
+<div style="position:absolute;top:209;left:104"><span class="ft2">код структурного </span></div>
+<div style="position:absolute;top:224;left:110"><span class="ft2">подразделения</span></div>
+<div style="position:absolute;top:195;left:501"><span class="ft2"> Кредит</span></div>
+<div style="position:absolute;top:195;left:574"><span class="ft2"> Сумма,</span></div>
+<div style="position:absolute;top:209;left:571"><span class="ft2">руб. коп.</span></div>
+<div style="position:absolute;top:244;left:571"><span class="ft2"><?=$this->credit['origin_amount']?></span></div>
+<div style="position:absolute;top:145;left:297"><span class="ft4">(структурное подразделение)</span></div>
+<div style="position:absolute;top:247;left:266"><span class="ft2"> </span></div>
+<div style="position:absolute;top:122;left:282"><span class="ft4"> (организация)</span></div>
+<div style="position:absolute;top:209;left:209"><span class="ft2">корреспондирующий счет, </span></div>
+<div style="position:absolute;top:224;left:253"><span class="ft2">субсчет</span></div>
+<div style="position:absolute;top:195;left:642"><span class="ft2"> Код целевого </span></div>
+<div style="position:absolute;top:209;left:647"><span class="ft2">назначения</span></div>
+<div style="position:absolute;top:195;left:251"><span class="ft2">Дебет</span></div>
+<div style="position:absolute;top:290;left:393"><span class="ft2"> договор займа № <?=$this->credit['id']?> от <?=date('d.m.y', strtotime($this->credit['opening_date']))?></span></div>
+<div style="position:absolute;top:305;left:393"><span class="ft2"> <?=Finrus_Utils::num2str($this->credit['origin_amount'])?> </span></div>
+<div style="position:absolute;top:317;left:400"><span class="ft4">(прописью)</span></div>
+<div style="position:absolute;top:328;left:393"><span class="ft2"> <?=intval($this->credit['origin_amount'])?> </span></div>
+<div style="position:absolute;top:328;left:579"><span class="ft2"> руб.</span></div>
+<div style="position:absolute;top:407;left:188"><span class="ft4">(подпись)</span></div>
+<div style="position:absolute;top:407;left:306"><span class="ft4"> (расшифровка подписи)</span></div>
+<div style="position:absolute;top:384;left:253"><span class="ft4">(должность)</span></div>
+<div style="position:absolute;top:384;left:397"><span class="ft4"> (подпись)</span></div>
+<div style="position:absolute;top:384;left:515"><span class="ft4"> (расшифровка подписи)</span></div>
+<div style="position:absolute;top:430;left:395"><span class="ft4">(сумма прописью)</span></div>
+<div style="position:absolute;top:441;left:579"><span class="ft2"> руб.</span></div>
+<div style="position:absolute;top:529;left:163"><span class="ft4">(подпись)</span></div>
+<div style="position:absolute;top:529;left:280"><span class="ft4"> (расшифровка подписи)</span></div>
+<div style="position:absolute;top:156;left:667"><span class="ft2"> Дата составления</span></div>
+<div style="position:absolute;top:173;left:667"><span class="ft2"> <?=date('Y-m-d', strtotime($this->credit['opening_date']))?></span></div>
+<div style="position:absolute;top:156;left:560"><span class="ft2">Номер документа</span></div>
+<div style="position:absolute;top:173;left:560"><span class="ft2"><?=$this->credit['id']?></span></div>
+<div style="position:absolute;top:505;left:331"><span class="ft4">удостоверяющего личность получателя)</span></div>
+<div style="position:absolute;top:482;left:315"><span class="ft4">(наименование, номер, дата и место выдачи документа,</span></div>
+</body>
+</html>

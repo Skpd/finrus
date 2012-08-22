@@ -1,0 +1,30 @@
+<? if (!empty($this->expired)): ?>
+    <ul class="notifications ui-state-error ui-helper-clearfix">
+        <? foreach($this->expired as $credit): ?>
+            <li>
+                <div class="text">
+                    <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['middle_name']?>, <!-- паспорт №<span class="bold"><?=$credit['passport']?></span>, --> тел. <span class="bold"><?=$credit['phone']?></span>, <?=$credit['remain']?> руб.
+                </div>
+                <a class="default-button" href="<?=$this->url(array('controller' => 'credit', 'action' => 'close', 'credit' => $credit['id']), 'default')?>">
+                    <span class="ui-icon ui-icon-closethick"></span>
+                </a>
+            </li>
+        <? endforeach; ?>
+    </ul>
+<? endif; ?>
+
+<? if (!empty($this->active)): ?>
+<ul class="notifications ui-state-highlight">
+    <? foreach($this->active as $credit): ?>
+    <li>
+        <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['first_name']?>, паспорт №<span class="bold"><?=$credit['passport']?></span>, <?=$credit['remain']?> руб.
+    </li>
+    <? endforeach; ?>
+</ul>
+<? endif; ?>
+
+<? if ($this->isAllowedReport): ?>
+    <?=$this->render('chart.phtml')?>
+<? endif; ?>
+
+<?=$this->render('buttons.phtml')?>
