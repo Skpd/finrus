@@ -28,7 +28,7 @@
                     <td class="ui-widget-content"><?=$value['id']?></td>
                     <td class="ui-widget-content"><?=$value['credit_id']?></td>
                     <td class="ui-widget-content"><?=$value['amount']?></td>
-                    <td class="ui-widget-content"><?=$value['login']?></td>
+                    <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'user', 'action' => 'info', 'id' => $value['user_id']), 'default', true)?>"><?=$value['login']?></a></td>
                     <td class="ui-widget-content"><?=$value['date']?></td>
                     <td class="ui-widget-content">
                         Скачать
