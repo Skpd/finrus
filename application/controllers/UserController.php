@@ -4,7 +4,6 @@ class UserController extends Zend_Controller_Action
 {
 
     public $ajaxable = array(
-        'client-info' => array('json')
     );
 
     public function init()
@@ -117,31 +116,6 @@ class UserController extends Zend_Controller_Action
 //
 //        }
 //    }
-
-    public function clientInfoAction()
-    {
-        $id = $this->_getParam('id');
-
-        $clients = new Model_DbTable_Clients();
-        $credits = new Model_DbTable_Credits();
-
-        $client = $clients->find($id)->current();
-
-        if (!empty($client)) {
-            $this->view->title   = $client['last_name'] . ' ' . $client['first_name'];
-            $this->view->content = $this->view->partial(
-                'user/client-info.phtml',
-                array(
-                    'client'        => $client->toArray(),
-                    'isBlacklisted' => $client->isBlacklisted(),
-                    'credits'       => $credits->fetchAll(array('client_id = ?' => $id), 'id desc')->toArray()
-                )
-            );
-        } else {
-            $this->view->title   = 'Ошибка.';
-            $this->view->content = 'Клиент не найден.';
-        }
-    }
 
     public function deleteAction()
     {

@@ -32,7 +32,7 @@
             <? foreach($this->data as $k => $value): ?>
                 <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
                     <td class="ui-widget-content"><?=$value['id']?></td>
-                    <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'user', 'action' => 'client-info', 'id' => $value['client_id']), 'default', true)?>"><?=$value['last_name']?> <?=$value['first_name']?></a></td>
+                    <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'client', 'action' => 'info', 'id' => $value['client_id']), 'default', true)?>"><?=$value['last_name']?> <?=$value['first_name']?></a></td>
                     <td class="ui-widget-content"><?=$value['amount']?></td>
                     <!--
                     <td class="ui-widget-content"><?=$value['remain']?></td>
