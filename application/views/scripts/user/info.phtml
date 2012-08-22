@@ -1,7 +1,7 @@
 <?$currency = new Zend_Currency()?>
 <ul>
     <li>
-        <p>За последний месяц:</p>
+        <p class="bold" style="padding-bottom: 10px">За последний месяц:</p>
         <ul>
             <li>Выдано кредитов: <?=$this->monthly['credit_count']?></li>
             <li>На сумму <?=$currency->toCurrency($this->monthly['credit_sum'])?></li>
@@ -9,7 +9,7 @@
         </ul>
     </li>
     <li>
-        <p>Всего:</p>
+        <p class="bold" style="padding-top: 10px;padding-bottom: 10px;">Всего:</p>
         <ul>
             <li>Выдано кредитов: <?=$this->total['credit_count']?></li>
             <li>На сумму <?=$currency->toCurrency($this->total['credit_sum'])?></li>
