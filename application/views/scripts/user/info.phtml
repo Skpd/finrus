@@ -1,0 +1,19 @@
+<?$currency = new Zend_Currency()?>
+<ul>
+    <li>
+        <p>За последний месяц:</p>
+        <ul>
+            <li>Выдано кредитов: <?=$this->monthly['credit_count']?></li>
+            <li>На сумму <?=$currency->toCurrency($this->monthly['credit_sum'])?></li>
+            <li>Процент возврата: <?=round($this->monthly['returned_percent'])?>%</li>
+        </ul>
+    </li>
+    <li>
+        <p>Всего:</p>
+        <ul>
+            <li>Выдано кредитов: <?=$this->total['credit_count']?></li>
+            <li>На сумму <?=$currency->toCurrency($this->total['credit_sum'])?></li>
+            <li>Процент возврата: <?=round($this->total['returned_percent'])?>%</li>
+        </ul>
+    </li>
+</ul>

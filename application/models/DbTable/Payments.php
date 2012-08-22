@@ -12,6 +12,11 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
             'refTableClass'     => 'Model_DbTable_Credits',
             'refColumns'        => 'id'
         ),
+        'User' => array(
+            'columns'           => 'user_id',
+            'refTableClass'     => 'Model_DbTable_Users',
+            'refColumns'        => 'id'
+        ),
     );
 
     public function create(array $values)

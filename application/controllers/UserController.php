@@ -4,6 +4,7 @@ class UserController extends Zend_Controller_Action
 {
 
     public $ajaxable = array(
+        'info' => array('json')
     );
 
     public function init()
@@ -103,19 +104,48 @@ class UserController extends Zend_Controller_Action
             ->gotoSimple($this->_helper->url('index', 'user', 'default'));
     }
 
-//    public function opInfoAction()
-//    {
-//        $id = $this->_getParam('id');
-//
-//        $users   = new Model_DbTable_Users();
-//        $credits = new Model_DbTable_Credits();
-//
-//        $user = $users->find($id)->current();
-//
-//        if (!empty($user) && $user['type'] == Finrus_Acl::ROLE_USER) {
-//
-//        }
-//    }
+    public function infoAction()
+    {
+        $id = $this->_getParam('id');
+
+        $users    = new Model_DbTable_Users();
+        $payments = new Model_DbTable_Payments();
+
+        $user = $users->find($id)->current();
+
+        if (!empty($user)) {
+
+            $select = $payments->select(true)->setIntegrityCheck(false)
+                ->columns(
+                array(
+                    'credit_count'     => 'COUNT(credit_id)',
+                    'credit_sum'       => 'SUM(credits.amount)',
+                    'returned_percent' => 'COUNT(credit_id) / COUNT(credits.status = \'successfull\') * 100'
+                ))
+                ->where('user_id = ?', $user['id'])
+                ->join('credits', 'credits.id = payments.credit_id', null)
+                ->group('user_id');
+
+            $total = $select->query()->fetch();
+
+            $select->where('payments.date >= NOW() - INTERVAL 1 MONTH');
+
+            $monthly = $select->query()->fetch();
+
+            $this->view->title   = $user['login'];
+            $this->view->content = $this->view->partial(
+                'user/info.phtml',
+                array(
+                    'user'    => $user->toArray(),
+                    'total'   => $total,
+                    'monthly' => $monthly
+                )
+            );
+        } else {
+            $this->view->title   = 'Ошибка.';
+            $this->view->content = 'Оператор не найден.';
+        }
+    }
 
     public function deleteAction()
     {
