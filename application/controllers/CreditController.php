@@ -52,7 +52,9 @@ class CreditController extends Zend_Controller_Action
 
         $values['page'] = empty($values['page']) ? 1 : intval($values['page']);
 
-        $select->join('clients', "credits.client_id = clients.id", array('first_name', 'last_name', 'middle_name', 'client_id' => 'id'));
+        $select->join('clients', "credits.client_id = clients.id", array(
+            'first_name', 'last_name', 'middle_name', 'client_id' => 'id'
+        ));
 
         $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
 
@@ -71,11 +73,10 @@ class CreditController extends Zend_Controller_Action
 
         $credits = new Model_DbTable_Credits();
 
-        $credit = $credits->select()
-            ->where('client_id = ?', $client_id)
-            ->where("status='active'")
-            ->query()
-            ->fetchAll();
+        $credit = $credits->fetchAll(array(
+            'client_id = ?' => $client_id,
+            'status = ?'    => 'active'
+        ))->toArray();
 
         $this->view->credit = $credit;
     }
