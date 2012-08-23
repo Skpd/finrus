@@ -116,21 +116,41 @@ class UserController extends Zend_Controller_Action
         if (!empty($user)) {
 
             $select = $payments->select(true)->setIntegrityCheck(false)
-                ->columns(
-                array(
-                    'credit_count'     => 'COUNT(credit_id)',
-                    'credit_sum'       => 'SUM(credits.amount)',
-                    'returned_percent' => 'COUNT(credit_id) / COUNT(credits.status = \'successfull\') * 100'
-                ))
+                ->columns(array('payment_amount' => 'amount'))
                 ->where('user_id = ?', $user['id'])
-                ->join('credits', 'credits.id = payments.credit_id', null)
-                ->group('user_id');
+                ->join('credits', 'credits.id = payments.credit_id', array('status', 'credit_amount' => 'amount'))
+                ->group('payments.id');
 
-            $total = $select->query()->fetch();
+            $total = $select->query()->fetchAll();
+
+            $total['credit_count'] = count($total);
+
+            foreach ($total as $k => $row) {
+                $total['credit_sum'] += $row['credit_amount'];
+
+                if ($row['status'] == 'successfull') {
+                    $total['returned_count']++;
+                }
+            }
+
+            $total['returned_percent'] = $total['returned_count'] / $total['credit_count'] * 100;
+
 
             $select->where('payments.date >= NOW() - INTERVAL 1 MONTH');
 
-            $monthly = $select->query()->fetch();
+            $monthly = $select->query()->fetchAll();
+
+            $monthly['credit_count'] = count($monthly);
+
+            foreach ($monthly as $k => $row) {
+                $monthly['credit_sum'] += $row['credit_amount'];
+
+                if ($row['status'] == 'successfull') {
+                    $monthly['returned_count']++;
+                }
+            }
+
+            $monthly['returned_percent'] = $monthly['returned_count'] / $monthly['credit_count'] * 100;
 
             $this->view->title   = $user['login'];
             $this->view->content = $this->view->partial(
