@@ -33,6 +33,7 @@ class Finrus_Acl extends Zend_Acl {
         //resources allowed for admins
         $this->addResource('user', 'adminPages');
         $this->addResource('settings', 'adminPages');
+        $this->addResource('economy', 'adminPages');
 
         //allow all the resources associated with the roles
         $this->allow(self::ROLE_GUEST, 'guestPages');
