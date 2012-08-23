@@ -73,6 +73,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             ),
             array(
                 'module'     => 'default',
+                'controller' => 'economy',
+                'action'     => 'index',
+                'label'      => 'Экономика',
+                'resource'   => 'economy',
+                'privilege'  => 'view'
+            ),
+            array(
+                'module'     => 'default',
                 'controller' => 'settings',
                 'action'     => 'index',
                 'label'      => 'Настройки',
