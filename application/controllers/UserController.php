@@ -138,6 +138,7 @@ class UserController extends Zend_Controller_Action
 
             $select->where('payments.date >= NOW() - INTERVAL 1 MONTH');
 
+
             $monthly = $select->query()->fetchAll();
 
             $monthly['credit_count'] = count($monthly);
