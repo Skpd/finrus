@@ -75,22 +75,26 @@ class SettingsController extends Zend_Controller_Action
         $affiliate = $affiliates->find($affiliate_id)->current();
 
         if (!empty($affiliate)) {
-            $activeCredits = $affiliate->findDependentRowset('Model_DbTable_Credits');
+            $daysDiff = floor((time() - strtotime($affiliate['recalculate_date']))/86400);
 
-            foreach ($activeCredits as $credit) {
-                $credit->recalculate();
+            if ($daysDiff > 0) {
+                $activeCredits = $affiliate->findDependentRowset('Model_DbTable_Credits');
 
-                $payments = $credit->getYesterdayPayments();
+                foreach ($activeCredits as $credit) {
+                    $credit->recalculate();
 
-                foreach ($payments as $payment) {
-                    $affiliate->current_target += $payment->amount;
+                    $payments = $credit->getPaymentsDaysAgo($daysDiff);
+
+                    foreach ($payments as $payment) {
+                        $affiliate->current_target += $payment->amount;
+                    }
                 }
+
+                $affiliate->current_target -= $affiliate->target * $daysDiff;
+
+                $affiliate['recalculate_date'] = date('Y-m-d');
+                $affiliate->save();
             }
-            $affiliate->current_target -= $affiliate->target;
-
-            $affiliate['recalculate_date'] = date('Y-m-d', time() + 86400);
-
-            $affiliate->save();
         }
 
         $this->_redirect($this->view->url(array('controller' => 'settings', 'action' => 'index'), 'default', true));

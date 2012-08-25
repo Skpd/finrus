@@ -25,9 +25,9 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
             $penalty_days = floor((time() - strtotime($this->_data['closing_date'])) / 3600 / 24);
 
             if ($penalty_days < 30) {
-                $this->remain += $remain * 0.02 * $penalty_days / 2;
+                $this->remain = $remain + $remain * 0.02 * $penalty_days / 2;
             } else {
-                $this->remain += $remain * 0.02 * $penalty_days;
+                $this->remain = $remain + $remain * 0.02 * $penalty_days;
             }
 
             $this->status = self::STATUS_FAILED;
@@ -36,8 +36,8 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
         }
     }
 
-    public function getYesterdayPayments()
+    public function getPaymentsDaysAgo($days)
     {
-        return $this->findDependentRowset('Model_DbTable_Payments', null, $this->select()->where('date >= ?', date('Y-m-d', time())));
+        return $this->findDependentRowset('Model_DbTable_Payments', null, $this->select()->where('date >= DATE(NOW() - INTERVAL ? DAY)', $days));
     }
 }

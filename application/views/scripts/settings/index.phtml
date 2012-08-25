@@ -90,9 +90,7 @@
                     <td field="name" value="<?=$value['current_target']?>" class="ui-widget-content"><?=$value['current_target']?></td>
                     <td>
                         <a class="default-button affiliateEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'affiliate'), 'default', true)?>">Редактировать</a>
-                        <? if(strtotime($value['recalculate_date']) <= time()): ?>
-                            <a href="<?=$this->url(array('controller' => 'settings', 'action' => 'recalculate-credits', 'affiliate' => $value['id']), 'default', true)?>" class="default-button">Пересчитать кредиты</a>
-                        <? endif; ?>
+                        <a href="<?=$this->url(array('controller' => 'settings', 'action' => 'recalculate-credits', 'affiliate' => $value['id']), 'default', true)?>" class="default-button">Пересчитать кредиты</a>
                     </td>
                 </tr>
             <? endforeach; ?>
