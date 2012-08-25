@@ -1,16 +1,37 @@
-<ul>
-    <li>Сумма выданных займов всего: <?=$this->total_credits['credits_count']?></li>
-    <li>Сумма возвратов всего: <?=$this->total_returns['returns_count']?></li>
-    <li>Сумма выдано займов в календарный месяц: <?=$this->monthly_credits['credits_count']?></li>
-    <li>Сумма возвратов в календарный месяц: <?=$this->monthly_returns['returns_count']?></li>
-    <li>Сумма долга всего: <?=$this->currency($this->total_debt['debt'])?></li>
-    <li>Сумма долга в активных займах: <?=$this->currency($this->total_active_debt['debt'])?></li>
-    <li>
-        <p>Сумма долга по календарным месяцам:</p>
-        <ul style="margin-left: 15px;">
-            <? foreach ($this->monthly_debts as $row): ?>
-                <li><?=$row['month']?>: <?=$this->currency($row['debt'])?></li>
-            <? endforeach; ?>
-        </ul>
-    </li>
-</ul>
+<table class="default-table">
+    <tr>
+        <th style="border-right: 1px solid;" class="ui-widget-header" colspan="2">Сумма выданных займов</th>
+        <th style="border-right: 1px solid;" class="ui-widget-header" colspan="2">Сумма возвратов</th>
+        <th class="ui-widget-header" colspan="2">Сумма долга</th>
+    </tr>
+    <tr>
+        <th width="16.6%" style="border-right: 1px solid;" class="ui-widget-header">всего</th>
+        <th width="16.6%" style="border-right: 1px solid;" class="ui-widget-header">в календарный месяц</th>
+        <th width="16.6%" style="border-right: 1px solid;" class="ui-widget-header">всего</th>
+        <th width="16.6%" style="border-right: 1px solid;" class="ui-widget-header">в календарный месяц</th>
+        <th width="16.6%" style="border-right: 1px solid;" class="ui-widget-header">всего</th>
+        <th width="16.6%" class="ui-widget-header">в активных займах</th>
+    </tr>
+    <tr>
+        <td class="ui-widget-content"><?=$this->total_credits['credits_count']?></td>
+        <td class="ui-widget-content"><?=$this->monthly_credits['credits_count']?></td>
+        <td class="ui-widget-content"><?=$this->total_returns['returns_count']?></td>
+        <td class="ui-widget-content"><?=$this->monthly_returns['returns_count']?></td>
+        <td class="ui-widget-content"><?=$this->currency($this->total_debt['debt'])?></td>
+        <td class="ui-widget-content"><?=$this->currency($this->total_active_debt['debt'])?></td>
+    </tr>
+</table>
+
+<table class="default-table" style="margin-top: 25px;">
+    <caption class="bold">Сумма долга по календарным месяцам</caption>
+    <tr>
+        <? foreach ($this->monthly_debts as $row): ?>
+            <th class="ui-widget-header"><?=$row['month']?></th>
+        <? endforeach; ?>
+    </tr>
+    <tr>
+        <? foreach ($this->monthly_debts as $row): ?>
+            <td class="ui-widget-content"><?=$this->currency($row['debt'])?></td>
+        <? endforeach; ?>
+    </tr>
+</table>
