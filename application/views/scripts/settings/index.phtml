@@ -75,7 +75,7 @@
             <th class="ui-widget-header">Имя</th>
             <th class="ui-widget-header">Город</th>
             <th class="ui-widget-header">План</th>
-            <th class="ui-widget-header">Осталось</th>
+            <th class="ui-widget-header">Прогресс</th>
             <th class="ui-widget-header">Действия</th>
         </tr>
     </thead>
@@ -87,7 +87,7 @@
                     <td field="name" value="<?=$value['name']?>" class="ui-widget-content"><?=$value['name']?></td>
                     <td field="city" value="<?=$value['city_id']?>" class="ui-widget-content"><?=$this->cities[$value['city_id']]['name']?></td>
                     <td field="name" value="<?=$value['target']?>" class="ui-widget-content"><?=$value['target']?></td>
-                    <td field="name" value="<?=$value['current_target']?>" class="ui-widget-content"><?=$value['current_target']?></td>
+                    <td field="name" value="<?=$value['current_target']?>" class="ui-widget-content"><span style="color: <?=$value['current_target']>0 ? 'green' : 'red'?>"><?=$value['current_target']?></span></td>
                     <td>
                         <a class="default-button affiliateEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'affiliate'), 'default', true)?>">Редактировать</a>
                         <a href="<?=$this->url(array('controller' => 'settings', 'action' => 'recalculate-credits', 'affiliate' => $value['id']), 'default', true)?>" class="default-button">Пересчитать кредиты</a>
