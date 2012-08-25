@@ -123,32 +123,30 @@ class UserController extends Zend_Controller_Action
 
             $total = $select->query()->fetchAll();
 
-            $total['credit_count'] = count($total);
-
             foreach ($total as $k => $row) {
                 $total['credit_sum'] += $row['credit_amount'];
 
-                if ($row['status'] == 'successfull') {
+                if ($row['status'] != Model_Credit::STATUS_FAILED) {
                     $total['returned_count']++;
                 }
+
+                $total['credit_count']++;
             }
 
             $total['returned_percent'] = $total['returned_count'] / $total['credit_count'] * 100;
 
-
             $select->where('payments.date >= NOW() - INTERVAL 1 MONTH');
 
-
             $monthly = $select->query()->fetchAll();
-
-            $monthly['credit_count'] = count($monthly);
 
             foreach ($monthly as $k => $row) {
                 $monthly['credit_sum'] += $row['credit_amount'];
 
-                if ($row['status'] == 'successfull') {
+                if ($row['status'] != Model_Credit::STATUS_FAILED) {
                     $monthly['returned_count']++;
                 }
+
+                $monthly['credit_count']++;
             }
 
             $monthly['returned_percent'] = $monthly['returned_count'] / $monthly['credit_count'] * 100;
