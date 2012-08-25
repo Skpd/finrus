@@ -4,6 +4,7 @@
     <li>Сумма выдано займов в календарный месяц: <?=$this->monthly_credits['credits_count']?></li>
     <li>Сумма возвратов в календарный месяц: <?=$this->monthly_returns['returns_count']?></li>
     <li>Сумма долга всего: <?=$this->currency($this->total_debt['debt'])?></li>
+    <li>Сумма долга в активных займах: <?=$this->currency($this->total_active_debt['debt'])?></li>
     <li>
         <p>Сумма долга по календарным месяцам:</p>
         <ul style="margin-left: 15px;">
