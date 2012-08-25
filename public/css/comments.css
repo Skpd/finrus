@@ -1,0 +1,36 @@
+.comments-list {
+
+}
+
+.comment {
+    margin: 15px 0;
+    background: #fff6f6;
+}
+
+.comment-header {
+    border-top: 1px solid #caa;
+    clear: both;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.comment-author {
+    float: left;
+}
+
+.comment-time {
+    float: right;
+}
+
+.comment-body {
+    padding: 15px;
+}
+
+#comment-form {
+    border-top: 1px solid #caa;
+}
+
+#comment-form textarea {
+    width: 240px;
+    height: 60px;
+}

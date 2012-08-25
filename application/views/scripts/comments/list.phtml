@@ -1,0 +1,15 @@
+<? if (!empty($this->comments)): ?>
+<ol class="comments-list" data-id="<?=$this->conversation?>">
+    <? foreach ($this->comments as $comment): ?>
+    <li class="comment">
+        <div class="comment-header ui-helper-clearfix">
+            <div class="comment-author"><?=$this->escape($comment['author'])?></div>
+            <div class="comment-time"><?=$this->escape($comment['created'])?></div>
+        </div>
+        <div class="comment-body"><?=$this->escape($comment['text'])?></div>
+    </li>
+    <? endforeach; ?>
+</ol>
+<? endif; ?>
+
+<?=$this->action('add', 'comments', null, array('conversation' => $this->conversation))?>
