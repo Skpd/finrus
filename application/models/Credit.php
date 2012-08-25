@@ -14,12 +14,20 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
     public function recalculate()
     {
         if ($this->isOverdue()) {
+            $remain = $this->amount;
+
+            $payments = $this->findDependentRowset('Model_DbTable_Payments');
+
+            foreach ($payments as $payment) {
+                $remain -= $payment['amount'];
+            }
+
             $penalty_days = floor((time() - strtotime($this->_data['closing_date'])) / 3600 / 24);
 
             if ($penalty_days < 30) {
-                $this->remain += $this->remain * 0.02 * $penalty_days / 2;
+                $this->remain += $remain * 0.02 * $penalty_days / 2;
             } else {
-                $this->remain += $this->remain * 0.02 * $penalty_days;
+                $this->remain += $remain * 0.02 * $penalty_days;
             }
 
             $this->status = self::STATUS_FAILED;
