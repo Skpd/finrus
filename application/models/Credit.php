@@ -8,7 +8,7 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
 
     public function isOverdue()
     {
-        return $this->_data['status'] != self::STATUS_SUCCESSFUL && strtotime($this->_data['closing_date']) < time();
+        return $this->_data['status'] != self::STATUS_SUCCESSFUL && $this->_data['closing_date'] < date('Y-m-d');
     }
 
     public function recalculate()

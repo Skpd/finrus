@@ -26,10 +26,10 @@
     <tr>
         <th colspan="2" class="ui-widget-header">Сумма долга по календарным месяцам</th>
     </tr>
-    <tr>
-        <? foreach ($this->monthly_debts as $row): ?>
+    <? foreach ($this->monthly_debts as $row): ?>
+        <tr>
             <td width="16.6%" class="ui-widget-content"><?=$row['month']?></td>
             <td width="16.6%" class="ui-widget-content"><?=$this->currency($row['debt'])?></td>
-        <? endforeach; ?>
-    </tr>
+        </tr>
+    <? endforeach; ?>
 </table>

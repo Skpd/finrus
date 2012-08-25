@@ -21,7 +21,6 @@ class EconomyController extends Zend_Controller_Action
                 'month' => 'MONTHNAME(opening_date)'
             ))->
             where('status = ?', 'failed')->
-            orWhere('status = ?', 'active')->
             group('MONTHNAME(opening_date)')->
             order('opening_date DESC')->
             query()->fetchAll();
