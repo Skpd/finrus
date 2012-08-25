@@ -75,26 +75,46 @@ class SettingsController extends Zend_Controller_Action
         $affiliate = $affiliates->find($affiliate_id)->current();
 
         if (!empty($affiliate)) {
-            $daysDiff = floor((time() - strtotime($affiliate['recalculate_date']))/86400);
 
-            if ($daysDiff > 0) {
-                $activeCredits = $affiliate->findDependentRowset('Model_DbTable_Credits');
+            $activeCredits = $affiliate->findDependentRowset('Model_DbTable_Credits');
+            foreach ($activeCredits as $credit) {
+                $credit->recalculate();
+            }
 
-                foreach ($activeCredits as $credit) {
-                    $credit->recalculate();
+            $recalculateDate = new Zend_Date(strtotime($affiliate['recalculate_date']));
+            $currentDate     = new Zend_Date(date('Y-m-d'));
 
-                    $payments = $credit->getPaymentsDaysAgo($daysDiff);
+            while ($recalculateDate->add(1, Zend_Date::DAY)->compare($currentDate) <= 0) {
 
-                    foreach ($payments as $payment) {
-                        $affiliate->current_target += $payment->amount;
-                    }
+                $openedCredits = $affiliate->findDependentRowset(
+                    'Model_DbTable_Credits',
+                    null,
+                    $affiliates->select()->where('opening_date = ?', $recalculateDate->toString('yyyy-MM-dd'))
+                );
+
+                foreach ($openedCredits as $row) {
+                    $affiliate->current_target -= $row['origin_amount'];
                 }
 
-                $affiliate->current_target -= $affiliate->target * $daysDiff;
+                $payments = $affiliate->findManyToManyRowset(
+                    'Model_DbTable_Payments',
+                    'Model_DbTable_Credits',
+                    null,
+                    null,
+                    $affiliates->select()
+                        ->where('date >= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 00:00:00')
+                        ->where('date <= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 23:59:59')
+                );
 
-                $affiliate['recalculate_date'] = date('Y-m-d');
-                $affiliate->save();
+                foreach ($payments as $row) {
+                    $affiliate->current_target += $row['amount'];
+                }
+
+                $affiliate->current_target -= $affiliate->target;
             }
+
+            $affiliate->recalculate_date = date('Y-m-d');
+            $affiliate->save();
         }
 
         $this->_redirect(

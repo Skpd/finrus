@@ -17,6 +17,11 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
             'refTableClass'     => 'Model_DbTable_Affiliates',
             'refColumns'        => 'id'
         ),
+        'Payment' => array(
+            'columns'           => 'id',
+            'refTableClass'     => 'Model_DbTable_Payments',
+            'refColumns'        => 'credit_id'
+        )
     );
 
     public function getReport($period = 7)
