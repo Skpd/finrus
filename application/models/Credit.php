@@ -2,20 +2,34 @@
 
 class Model_Credit extends Zend_Db_Table_Row_Abstract
 {
-    public function getAmount()
-    {
-        $amount = $this->_data['amount'];
+    const STATUS_SUCCESSFUL = 'successfull';
+    const STATUS_ACTIVE     = 'active';
+    const STATUS_FAILED     = 'failed';
 
-        if ($this->_data['closing_date'] < time()) {
-            $penalty_days = (time() - strtotime($this->_data['closing_date'])) / 3600;
+    public function isOverdue()
+    {
+        return $this->_data['status'] != self::STATUS_SUCCESSFUL && strtotime($this->_data['closing_date']) < time();
+    }
+
+    public function recalculate()
+    {
+        if ($this->isOverdue()) {
+            $penalty_days = floor((time() - strtotime($this->_data['closing_date'])) / 3600 / 24);
 
             if ($penalty_days < 30) {
-                $amount += $this->_data['origin_amount'] * 0.02 * $penalty_days / 2;
+                $this->remain += $this->remain * 0.02 * $penalty_days / 2;
             } else {
-                $amount += $this->_data['origin_amount'] * 0.02 * $penalty_days / 2;
+                $this->remain += $this->remain * 0.02 * $penalty_days;
             }
-        }
 
-        return $amount;
+            $this->status = self::STATUS_FAILED;
+
+            $this->save();
+        }
+    }
+
+    public function getYesterdayPayments()
+    {
+        return $this->findDependentRowset('Model_DbTable_Payments', null, $this->select()->where('date >= ?', date('Y-m-d', time())));
     }
 }

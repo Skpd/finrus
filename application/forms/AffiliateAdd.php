@@ -26,6 +26,12 @@ class Form_AffiliateAdd extends Zend_Form
 
         $this->addElement($select);
 
+        $this->addElement('text', 'target', array(
+            'label' => 'План: ',
+            'required' => true,
+            'class' => 'ui-state-default ui-corner-all'
+        ));
+
         $this->addDecorators(array(
             'FormErrors',
             'FormElements',
