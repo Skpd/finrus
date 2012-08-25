@@ -33,7 +33,7 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
 
         $values['credit_id'] = (int) $credits->select()
             ->where('client_id = ?', $values['client_id'])
-            ->where("status='active'")
+            ->where("status!=?", Model_Credit::STATUS_SUCCESSFUL)
             ->query()
             ->fetchColumn()
         ;

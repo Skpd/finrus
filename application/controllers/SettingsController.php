@@ -4,9 +4,9 @@ class SettingsController extends Zend_Controller_Action
 {
     public function indexAction()
     {
-        $affiliates = new Model_DbTable_Affiliates();
+        $affiliates  = new Model_DbTable_Affiliates();
         $citiesTable = new Model_DbTable_Cities();
-        $cities = array();
+        $cities      = array();
 
         $res = $citiesTable->fetchAll()->toArray();
 
@@ -30,7 +30,7 @@ class SettingsController extends Zend_Controller_Action
             $form  = new Form_CityAdd();
             $table = new Model_DbTable_Cities();
         } else {
-            $form   = new Form_AffiliateAdd();
+            $form  = new Form_AffiliateAdd();
             $table = new Model_DbTable_Affiliates();
         }
 
@@ -64,5 +64,35 @@ class SettingsController extends Zend_Controller_Action
 
         $this->getHelper('layout')->disableLayout();
         $this->getHelper('viewRenderer')->setNoRender();
+    }
+
+    public function recalculateCreditsAction()
+    {
+        $affiliate_id = $this->_getParam('affiliate', 0);
+
+        $affiliates = new Model_DbTable_Affiliates();
+
+        $affiliate = $affiliates->find($affiliate_id)->current();
+
+        if (!empty($affiliate)) {
+            $activeCredits = $affiliate->findDependentRowset('Model_DbTable_Credits');
+
+            foreach ($activeCredits as $credit) {
+                $credit->recalculate();
+
+                $payments = $credit->getYesterdayPayments();
+
+                foreach ($payments as $payment) {
+                    $affiliate->current_target += $payment->amount;
+                }
+            }
+            $affiliate->current_target -= $affiliate->target;
+
+            $affiliate['recalculate_date'] = date('Y-m-d', time() + 86400);
+
+            $affiliate->save();
+        }
+
+        $this->_redirect($this->view->url(array('controller' => 'settings', 'action' => 'index'), 'default', true));
     }
 }

@@ -6,6 +6,7 @@
             <th class="ui-widget-header">#</th>
             <th class="ui-widget-header sortable" field="last_name">Клиент</th>
             <th class="ui-widget-header sortable" field="amount">Сумма</th>
+            <th class="ui-widget-header sortable" field="remain">Остаток</th>
             <!--
             <th class="ui-widget-header">Остаток</th>
             <th class="ui-widget-header">Last Payment</th>
@@ -34,8 +35,8 @@
                     <td class="ui-widget-content"><?=$value['id']?></td>
                     <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'client', 'action' => 'info', 'id' => $value['client_id']), 'default', true)?>"><?=$value['last_name']?> <?=$value['first_name']?></a></td>
                     <td class="ui-widget-content"><?=$value['amount']?></td>
-                    <!--
                     <td class="ui-widget-content"><?=$value['remain']?></td>
+                    <!--
                     <td class="ui-widget-content"><?=$value['last_payment_date']?></td>
                     <td class="ui-widget-content"><?=$value['next_payment_date']?></td>
                     -->

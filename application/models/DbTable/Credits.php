@@ -4,29 +4,20 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
 {
     protected $_name = 'credits';
 
+    protected $_rowClass = 'Model_Credit';
+
     protected $_referenceMap = array(
         'Clients' => array(
             'columns'           => 'client_id',
             'refTableClass'     => 'Model_DbTable_Clients',
             'refColumns'        => 'id'
         ),
+        'Affiliate' => array(
+            'columns'           => 'affiliate_id',
+            'refTableClass'     => 'Model_DbTable_Affiliates',
+            'refColumns'        => 'id'
+        ),
     );
-
-//    public function getStatisticsByOperator($id)
-//    {
-//        $total = $monthly = array(
-//            'credits'  => 0,
-//            'amount'   => 0,
-//            'returned' => 0,
-//        );
-//
-//        $this->select(true)->columns(
-//            array(
-//                'returned_sum'    => 'SUM(`amount`)',
-//                'credit_returned' => 'COUNT(`id`)',
-//            )
-//        )->where('');
-//    }
 
     public function getReport($period = 7)
     {

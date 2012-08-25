@@ -1,0 +1,15 @@
+<ul>
+    <li>Сумма выданных займов всего: <?=$this->total_credits['credits_count']?></li>
+    <li>Сумма возвратов всего: <?=$this->total_returns['returns_count']?></li>
+    <li>Сумма выдано займов в календарный месяц: <?=$this->monthly_credits['credits_count']?></li>
+    <li>Сумма возвратов в календарный месяц: <?=$this->monthly_returns['returns_count']?></li>
+    <li>Сумма долга всего: <?=$this->currency($this->total_debt['debt'])?></li>
+    <li>
+        <p>Сумма долга по календарным месяцам:</p>
+        <ul style="margin-left: 15px;">
+            <? foreach ($this->monthly_debts as $row): ?>
+                <li><?=$row['month']?>: <?=$this->currency($row['debt'])?></li>
+            <? endforeach; ?>
+        </ul>
+    </li>
+</ul>
