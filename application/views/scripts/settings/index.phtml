@@ -68,12 +68,14 @@
 </script>
 <div class="center">
 <h2>Филиалы:</h2>
-<table class="default-table ui-state-default" style="width: 40%; margin: 0 auto;">
+<table class="default-table ui-state-default" style="width: 80%; margin: 0 auto;">
     <thead>
         <tr>
             <th class="ui-widget-header">#</th>
             <th class="ui-widget-header">Имя</th>
             <th class="ui-widget-header">Город</th>
+            <th class="ui-widget-header">План</th>
+            <th class="ui-widget-header">Осталось</th>
             <th class="ui-widget-header">Действия</th>
         </tr>
     </thead>
@@ -84,8 +86,13 @@
                     <td class="ui-widget-content"><?=$value['id']?></td>
                     <td field="name" value="<?=$value['name']?>" class="ui-widget-content"><?=$value['name']?></td>
                     <td field="city" value="<?=$value['city_id']?>" class="ui-widget-content"><?=$this->cities[$value['city_id']]['name']?></td>
+                    <td field="name" value="<?=$value['target']?>" class="ui-widget-content"><?=$value['target']?></td>
+                    <td field="name" value="<?=$value['current_target']?>" class="ui-widget-content"><?=$value['current_target']?></td>
                     <td>
-                        <a class="affiliateEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'affiliate'), 'default', true)?>">Редактировать</a>
+                        <a class="default-button affiliateEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'affiliate'), 'default', true)?>">Редактировать</a>
+                        <? if(strtotime($value['recalculate_date']) <= time()): ?>
+                            <a href="<?=$this->url(array('controller' => 'settings', 'action' => 'recalculate-credits', 'affiliate' => $value['id']), 'default', true)?>" class="default-button">Пересчитать кредиты</a>
+                        <? endif; ?>
                     </td>
                 </tr>
             <? endforeach; ?>
@@ -104,7 +111,7 @@
 </div>
 
 <h2>Города:</h2>
-<table class="default-table ui-state-default" style="width: 40%; margin: 0 auto;">
+<table class="default-table ui-state-default" style="width: 80%; margin: 0 auto;">
     <thead>
         <tr>
             <th class="ui-widget-header">#</th>
@@ -119,7 +126,7 @@
                     <td field="name" value="<?=$value['name']?>" class="ui-widget-content"><?=$value['id']?></td>
                     <td class="ui-widget-content"><?=$value['name']?></td>
                     <td>
-                        <a class="cityEdit" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'city'), 'default', true)?>">Редактировать</a>
+                        <a class="cityEdit default-button" href="<?=$this->url(array('controller' => 'settings', 'action' => 'save', 'id' => $value['id'], 'type' => 'city'), 'default', true)?>">Редактировать</a>
                     </td>
                 </tr>
             <? endforeach; ?>
