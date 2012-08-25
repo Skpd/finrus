@@ -26,7 +26,7 @@
             <? foreach($this->data as $k => $value): ?>
                 <tr class="ui-widget <?=($k % 2 == 0) ? 'ui-state-default' : 'ui-state-hover'?>">
                     <td class="ui-widget-content"><?=$value['id']?></td>
-                    <td class="ui-widget-content"><?=$value['login']?></td>
+                    <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'user', 'action' => 'info', 'id' => $value['id']), 'default', true)?>"><?=$value['login']?></a></td>
                     <td class="ui-widget-content"><?=$value['type'] == 'admin' ? 'Администратор' : 'Оператор'?></td>
                     <td class="ui-widget-content"><?=$value['name']?></td>
                     <td class="ui-widget-content"><?=$value['created_date']?></td>
