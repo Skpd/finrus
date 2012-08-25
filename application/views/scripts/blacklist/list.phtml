@@ -6,6 +6,7 @@
             <th class="ui-widget-header">#</th>
             <th class="ui-widget-header sortable" field="client_id">Клиент</th>
             <th class="ui-widget-header sortable" field="return_date">Дата возврата</th>
+            <th class="ui-widget-header"></th>
         </tr>
     </thead>
     <tfoot>
@@ -25,6 +26,7 @@
                     <td class="ui-widget-content"><?=$value['id']?></td>
                     <td class="ui-widget-content"><a class="client-link" href="<?=$this->url(array('controller' => 'client', 'action' => 'info', 'id' => $value['client_id']), 'default', true)?>"><?=$value['last_name']?> <?=$value['first_name']?></a></td>
                     <td class="ui-widget-content"><?=$value['return_date'] == null ? 'Не вернул' : $value['return_date']?></td>
+                    <td class="ui-widget-content"><a href="javascript:void(0);" class="comments-open" data-id="user-<?=$value['client_id']?>">Комментарии</a></td>
                 </tr>
             <? endforeach; ?>
         <? else: ?>

@@ -29,6 +29,7 @@ class Finrus_Acl extends Zend_Acl {
         $this->addResource('payment', 'userPages');
         $this->addResource('client', 'userPages');
         $this->addResource('blacklist', 'userPages');
+        $this->addResource('comments', 'userPages');
 
         //resources allowed for admins
         $this->addResource('user', 'adminPages');
