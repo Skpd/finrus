@@ -13,6 +13,6 @@ class EconomyController extends Zend_Controller_Action
         $this->view->monthly_returns = $credits->select(true)->columns(array('returns_count' => 'COUNT(*)'))->where('opening_date >= NOW() - INTERVAL 1 MONTH')->where('status = ?', 'successfull')->query()->fetch();
 
         $this->view->total_debt    = $credits->select(true)->columns(array('debt' => 'SUM(amount)'))->where('status = ?', 'failed')->orWhere('status = ?', 'active')->query()->fetch();
-        $this->view->monthly_debts = $credits->select(true)->columns(array('debt' => 'SUM(amount)', 'month' => 'MONTHNAME(opening_date)'))->where('status = ?', 'failed')->orWhere('status = ?', 'active')->group('MONTHNAME(opening_date)')->query()->fetchAll();
+        $this->view->monthly_debts = $credits->select(true)->columns(array('debt' => 'SUM(amount)', 'month' => 'MONTHNAME(opening_date)'))->where('status = ?', 'failed')->orWhere('status = ?', 'active')->group('MONTHNAME(opening_date)')->order('opening_date DESC')->query()->fetchAll();
     }
 }
