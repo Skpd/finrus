@@ -22,16 +22,14 @@
     </tr>
 </table>
 
-<table class="default-table" style="margin-top: 25px;">
-    <caption class="bold">Сумма долга по календарным месяцам</caption>
+<table class="default-table" style="margin-top: 25px; width:33%;">
     <tr>
-        <? foreach ($this->monthly_debts as $row): ?>
-            <th class="ui-widget-header"><?=$row['month']?></th>
-        <? endforeach; ?>
+        <th colspan="2" class="ui-widget-header">Сумма долга по календарным месяцам</th>
     </tr>
     <tr>
         <? foreach ($this->monthly_debts as $row): ?>
-            <td class="ui-widget-content"><?=$this->currency($row['debt'])?></td>
+            <td width="16.6%" class="ui-widget-content"><?=$row['month']?></td>
+            <td width="16.6%" class="ui-widget-content"><?=$this->currency($row['debt'])?></td>
         <? endforeach; ?>
     </tr>
 </table>
