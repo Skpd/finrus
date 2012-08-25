@@ -97,6 +97,11 @@ class SettingsController extends Zend_Controller_Action
             }
         }
 
-        $this->_redirect($this->view->url(array('controller' => 'settings', 'action' => 'index'), 'default', true));
+        $this->_redirect(
+            $this->view->url(array('controller' => 'settings', 'action' => 'index'), 'default', true),
+            array(
+                'prependBase' => false
+            )
+        );
     }
 }
