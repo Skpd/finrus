@@ -215,6 +215,13 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
             $values['remain'] = $values['amount'];
         }
 
+        $users = new Model_DbTable_Users();
+        $values['affiliate_id'] = $users->find(Zend_Auth::getInstance()->getStorage()->read()->id)
+            ->current()
+            ->findParentRow('Model_DbTable_Affiliates')
+            ->id
+        ;
+
         $row = $this->createRow($values);
 
         $row->save();
