@@ -69,6 +69,7 @@ class PaymentController extends Zend_Controller_Action
                     $this->view->payment_id = $result['id'];
                     $this->view->redirect = true;
                 } else {
+                    Zend_Debug::dump($result);
                     $form->getElement('client_id')->addError('Активный кредит не найден.');
                 }
             }

@@ -75,7 +75,7 @@ class CreditController extends Zend_Controller_Action
 
         $credit = $credits->fetchAll(array(
             'client_id = ?' => $client_id,
-            'status = ?'    => 'active'
+            'status != ?'   => 'successfull'
         ))->toArray();
 
         $this->view->credit = $credit;
