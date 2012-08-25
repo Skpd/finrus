@@ -85,29 +85,20 @@ class SettingsController extends Zend_Controller_Action
             $currentDate     = new Zend_Date(date('Y-m-d'));
 
             while ($recalculateDate->add(1, Zend_Date::DAY)->compare($currentDate) <= 0) {
+                $select = new Zend_Db_Select(Zend_Db_Table::getDefaultAdapter());
 
-                $openedCredits = $affiliate->findDependentRowset(
-                    'Model_DbTable_Credits',
-                    null,
-                    $affiliates->select()->where('opening_date = ?', $recalculateDate->toString('yyyy-MM-dd'))
-                );
+                $select->from(array('c' => 'credits'), array('diff' => 'SUM(p.amount) - c.origin_amount'))
+                    ->join(array('p' => 'payments'), 'c.id = p.credit_id', null)
+                    ->where('c.remain <= 0')
+                    ->where('p.date >= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 00:00:00')
+                    ->where('p.date <= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 23:59:59')
+                    ->where('c.affiliate_id = ?', $affiliate_id)
+                    ->group('c.id');
 
-                foreach ($openedCredits as $row) {
-                    $affiliate->current_target -= $row['origin_amount'];
-                }
+                $diffs = $select->query()->fetchAll();
 
-                $payments = $affiliate->findManyToManyRowset(
-                    'Model_DbTable_Payments',
-                    'Model_DbTable_Credits',
-                    null,
-                    null,
-                    $affiliates->select()
-                        ->where('date >= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 00:00:00')
-                        ->where('date <= ?', $recalculateDate->toString('yyyy-MM-dd') . ' 23:59:59')
-                );
-
-                foreach ($payments as $row) {
-                    $affiliate->current_target += $row['amount'];
+                foreach ($diffs as $row) {
+                    $affiliate->current_target += $row['diff'];
                 }
 
                 $affiliate->current_target -= $affiliate->target;
