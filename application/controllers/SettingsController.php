@@ -84,7 +84,7 @@ class SettingsController extends Zend_Controller_Action
             $recalculateDate = new Zend_Date(strtotime($affiliate['recalculate_date']));
             $currentDate     = new Zend_Date(date('Y-m-d'));
 
-            while ($recalculateDate->add(1, Zend_Date::DAY)->compare($currentDate) <= 0) {
+            while ($recalculateDate->compare($currentDate) == -1) {
                 $select = new Zend_Db_Select(Zend_Db_Table::getDefaultAdapter());
 
                 $select->from(array('c' => 'credits'), array('diff' => 'SUM(p.amount) - c.origin_amount'))
@@ -102,6 +102,8 @@ class SettingsController extends Zend_Controller_Action
                 }
 
                 $affiliate->current_target -= $affiliate->target;
+
+                $recalculateDate->add(1, Zend_Date::DAY);
             }
 
             $affiliate->recalculate_date = date('Y-m-d');
