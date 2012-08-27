@@ -3,7 +3,7 @@
         <? foreach($this->expired as $credit): ?>
             <li>
                 <div class="text">
-                    <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['middle_name']?>, <!-- паспорт №<span class="bold"><?=$credit['passport']?></span>, --> тел. <span class="bold"><?=$credit['phone']?></span>, <?=$credit['remain']?> руб.
+                    <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['middle_name']?>, <!-- паспорт №<span class="bold"><?=$credit['passport']?></span>, --> тел. <span class="bold"><?=$credit['phone']?></span>, <?=$this->currency($credit['remain'])?>
                 </div>
                 <a class="default-button" href="<?=$this->url(array('controller' => 'credit', 'action' => 'close', 'credit' => $credit['id']), 'default')?>">
                     <span class="ui-icon ui-icon-closethick"></span>
@@ -17,7 +17,7 @@
 <ul class="notifications ui-state-highlight">
     <? foreach($this->active as $credit): ?>
     <li>
-        <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['first_name']?>, паспорт №<span class="bold"><?=$credit['passport']?></span>, <?=$credit['remain']?> руб.
+        <?=$credit['last_name']?> <?=$credit['first_name']?> <?=$credit['middle_name']?>, тел. <span class="bold"><?=$credit['phone']?></span>, закрытие <span class="bold"><?=$credit['closing_date']?></span>, остаток <span class="bold"><?=$this->currency($credit['remain'])?></span>
     </li>
     <? endforeach; ?>
 </ul>
