@@ -82,6 +82,15 @@ class SettingsController extends Zend_Controller_Action
                 $credit->recalculate();
             }
 
+            if (empty($affiliate['recalculate_date'])) {
+                $firstPayment = $affiliate->findManyToManyRowset(
+                    'Model_DbTable_Payments', 'Model_DbTable_Users', null, null,
+                    $affiliates->select()->order('date ASC')->limit(1)
+                )->current();
+
+                $affiliate['recalculate_date'] = date('Y-m-d', strtotime($firstPayment['date']));
+            }
+
             $recalculateDate = new Zend_Date(strtotime($affiliate['recalculate_date']));
             $currentDate     = new Zend_Date(date('Y-m-d'));
 
@@ -136,7 +145,7 @@ class SettingsController extends Zend_Controller_Action
 
             $affiliate['current_target'] = $select->query()->fetchColumn();
 
-//            $affiliate['recalculate_date'] = date('Y-m-d');
+            $affiliate['recalculate_date'] = date('Y-m-d');
             $affiliate->save();
         }
 
