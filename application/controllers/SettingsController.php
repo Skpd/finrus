@@ -70,7 +70,8 @@ class SettingsController extends Zend_Controller_Action
     {
         $affiliate_id = $this->_getParam('affiliate', 0);
 
-        $affiliates = new Model_DbTable_Affiliates();
+        $affiliates       = new Model_DbTable_Affiliates();
+        $affiliateHistory = new Model_DbTable_AffiliateHistory();
 
         $affiliate = $affiliates->find($affiliate_id)->current();
 
@@ -85,6 +86,21 @@ class SettingsController extends Zend_Controller_Action
             $currentDate     = new Zend_Date(date('Y-m-d'));
 
             while ($recalculateDate->compare($currentDate) == -1) {
+                $dayHistory = $affiliate->findDependentRowset(
+                    'Model_DbTable_AffiliateHistory',
+                    null,
+                    $affiliateHistory->select()->where('date = ?', $recalculateDate->toString('yyyy-MM-dd'))
+                )->current();
+
+                if (empty($dayHistory)) {
+                    $dayHistory = $affiliateHistory->createRow(
+                        array(
+                            'affiliate_id' => $affiliate['id'],
+                            'date'         => $recalculateDate->toString('yyyy-MM-dd')
+                        )
+                    );
+                }
+
                 $select = new Zend_Db_Select(Zend_Db_Table::getDefaultAdapter());
 
                 $select->from(array('c' => 'credits'), array('diff' => 'SUM(p.amount) - c.origin_amount'))
@@ -97,16 +113,30 @@ class SettingsController extends Zend_Controller_Action
 
                 $diffs = $select->query()->fetchAll();
 
+                $dayHistory['target'] = 0;
+
                 foreach ($diffs as $row) {
-                    $affiliate->current_target += $row['diff'];
+                    $dayHistory['target'] += $row['diff'];
                 }
 
-                $affiliate->current_target -= $affiliate->target;
+                $dayHistory['target'] -= $affiliate['target'];
+
+                $dayHistory->save();
 
                 $recalculateDate->add(1, Zend_Date::DAY);
             }
 
-            $affiliate->recalculate_date = date('Y-m-d');
+            $select = $affiliateHistory->select(false)->setIntegrityCheck(false)
+                ->from(
+                    array('ah' => $affiliateHistory->info(Zend_Db_Table::NAME)),
+                    array('sum' => 'SUM(ah.target)')
+                )
+                ->join(array('a' => $affiliates->info(Zend_Db_Table::NAME)), 'ah.affiliate_id = a.id', null)
+                ->where('affiliate_id = ?', $affiliate['id']);
+
+            $affiliate['current_target'] = $select->query()->fetchColumn();
+
+//            $affiliate['recalculate_date'] = date('Y-m-d');
             $affiliate->save();
         }
 
