@@ -224,7 +224,7 @@
 <div style="position:absolute;top:322;left:684"><span class="ft0"> </span></div>
 <div style="position:absolute;top:322;left:709"><span class="ft0">  </span></div>
 <div style="position:absolute;top:322;left:734"><span class="ft0"> коп.</span></div>
-<div style="position:absolute;top:322;left:704"><span class="ft2"> <?=strpos($this->payment['amount'], '.') === false ? '00' : str_pad(substr($this->credit['amount'], strpos($this->credit['amount'], '.') + 1), 2, '0', STR_PAD_LEFT)?> </span></div>
+<div style="position:absolute;top:322;left:704"><span class="ft2"> <?=strpos($this->payment['amount'], '.') === false ? '00' : str_pad(substr($this->payment['amount'], strpos($this->payment['amount'], '.') + 1), 2, '0', STR_PAD_LEFT)?> </span></div>
 <div style="position:absolute;top:322;left:754"><span class="ft0"> </span></div>
 <div style="position:absolute;top:337;left:41"><span class="ft1"> </span></div>
 <div style="position:absolute;top:337;left:475"><span class="ft1">  </span></div>
@@ -243,7 +243,7 @@
 <div style="position:absolute;top:360;left:41"><span class="ft1"> </span></div>
 <div style="position:absolute;top:360;left:475"><span class="ft1">  </span></div>
 <div style="position:absolute;top:360;left:524"><span class="ft1">  </span></div>
-<div style="position:absolute;top:345;left:569"><span class="ft2"> <?=Finrus_Utils::num2str($this->credit['amount'])?> </span></div>
+<div style="position:absolute;top:345;left:569"><span class="ft2"> <?=Finrus_Utils::num2str($this->payment['amount'])?> </span></div>
 <div style="position:absolute;top:360;left:639"><span class="ft1"> (</span></div>
 <div style="position:absolute;top:360;left:642"><span class="ft1">прописью)</span></div>
 <div style="position:absolute;top:360;left:680"><span class="ft1"> </span></div>
@@ -263,7 +263,7 @@
 <div style="position:absolute;top:383;left:722"><span class="ft0"> коп.</span></div>
 <div style="position:absolute;top:383;left:742"><span class="ft0"> </span></div>
 <div style="position:absolute;top:396;left:41"><span class="ft0">Сумма</span></div>
-<div style="position:absolute;top:396;left:141"><span class="ft2"> <?=Finrus_Utils::num2str($this->credit['amount'])?> </span></div>
+<div style="position:absolute;top:396;left:141"><span class="ft2"> <?=Finrus_Utils::num2str($this->payment['amount'])?> </span></div>
 <div style="position:absolute;top:396;left:73"><span class="ft0"> </span></div>
 <div style="position:absolute;top:396;left:91"><span class="ft0">  </span></div>
 <div style="position:absolute;top:396;left:475"><span class="ft0">  </span></div>
