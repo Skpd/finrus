@@ -1,0 +1,40 @@
+<a class="default-button" href="<?=$this->url(array('controller' => 'economy', 'action' => 'target-history', 'group' => 'day'), 'default', true)?>">По дням</a>
+<a class="default-button" href="<?=$this->url(array('controller' => 'economy', 'action' => 'target-history', 'group' => 'month'), 'default', true)?>">По месяцам</a>
+<a class="default-button" href="<?=$this->url(array('controller' => 'economy', 'action' => 'target-history', 'group' => 'year'), 'default', true)?>">По годам</a>
+
+<? if (!empty($this->data)): ?>
+    <table class="default-table" style="width: 50%; margin-top: 15px;">
+        <thead>
+            <tr>
+                <th class="ui-widget-header">Дата</th>
+                <th class="ui-widget-header">План</th>
+            </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="2" class="ui-widget-content">
+                <?=$this->paginationControl($this->data,
+                                            'Sliding',
+                                            'paging.phtml');
+                ?>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
+            <? foreach ($this->data as $k => $row): ?>
+                <tr class="ui-widget ui-state-hover">
+                    <td class="ui-widget-content">
+                        <? if ($this->group == 'day'): ?>
+                            <?=$row['group_date']?>
+                        <? elseif ($this->group == 'month'): ?>
+                            <?=date('M', mktime(null, null, null, $row['group_date']))?>
+                        <? elseif ($this->group == 'year'): ?>
+                            <?=date('Y', mktime(null, null, null, null, null, $row['group_date']))?>
+                        <? endif ?>
+                    </td>
+                    <td><span style="color: <?=$row['sum'] > 0 ? 'green' : 'red'?>;"><?=$this->currency($row['sum'])?></span></td>
+                </tr>
+            <? endforeach; ?>
+        </tbody>
+    </table>
+<? endif; ?>
