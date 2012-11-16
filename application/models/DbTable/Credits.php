@@ -193,6 +193,15 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
                 }
             } else if ($values['origin_amount'] <= 20000 && $isTrustedClient) {
                 switch ($values['duration']) {
+                    case 7:
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.06;
+                        break;
+                    case 14:
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.08;
+                        break;
+                    case 21:
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.105;
+                        break;
                     case 30:
                         $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.15;
                         break;
