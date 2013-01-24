@@ -81,6 +81,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             ),
             array(
                 'module'     => 'default',
+                'controller' => 'index',
+                'action'     => 'exbico',
+                'label'      => 'Exbico',
+                'resource'   => 'index',
+                'privilege'  => 'view'
+            ),
+            array(
+                'module'     => 'default',
                 'controller' => 'settings',
                 'action'     => 'index',
                 'label'      => 'Настройки',

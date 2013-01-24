@@ -14,6 +14,11 @@ class IndexController extends Zend_Controller_Action
             ->initContext('json');
     }
 
+    public function exbicoAction()
+    {
+
+    }
+    
     public function reportAction()
     {
         $period = $this->_request->getParam('period', 7);
