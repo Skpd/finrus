@@ -1,4 +1,4 @@
-SetEnvIfNoCase Host localhost|.*\.local APPLICATION_ENV=development
+SetEnvIfNoCase Host localhost|.*\.local|.*\.dev0\.in APPLICATION_ENV=development
 
 
 RewriteEngine On
