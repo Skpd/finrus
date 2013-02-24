@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * @property int id
+ * @property int client_id
+ * @property int amount
+ * @property int origin_amount
+ * @property int remain
+ * @property datetime last_payment_date
+ * @property datetime next_payment_date
+ * @property datetime opening_date
+ * @property datetime closing_date
+ * @property string status
+ * @property int affiliate_id
+ */
 class Model_Credit extends Zend_Db_Table_Row_Abstract
 {
     const STATUS_SUCCESSFUL = 'successfull';

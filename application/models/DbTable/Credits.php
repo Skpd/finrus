@@ -24,6 +24,23 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
         )
     );
 
+    /**
+     * @param $clientId
+     *
+     * @return Model_Credit
+     * @throws Exception
+     */
+    public function getActive($clientId)
+    {
+        $credit = $this->fetchRow(array('client_id = ?' => $clientId, 'status != ?' => Model_Credit::STATUS_SUCCESSFUL));
+
+        if ($credit === null) {
+            throw new Exception('Активный кредит не найден');
+        }
+
+        return $credit;
+    }
+
     public function getReport($period = 7)
     {
         $merged = array();
