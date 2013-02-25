@@ -69,8 +69,11 @@
                             var remain = 0, origin = 0;
 
                             text.push(
-                                'Дата открытия: ' + resp.credit.opening_date.split(' ')[0] + '. Остаток ' + resp.credit.remain + ' руб.'
+                                'Дата открытия: ' + resp.credit.opening_date.split(' ')[0] +
+                                '. Остаток ' + resp.credit.remain + ' руб.'
                             );
+
+                            text.push('Следующий платеж: ' + resp.credit.next_payment_date.split(' ')[0]);
 
                             remain += parseFloat(resp.credit.remain);
                             origin += parseFloat(resp.credit.origin_amount);
