@@ -46,13 +46,13 @@ class IndexController extends Zend_Controller_Action
 
             $res = $select->from('clients', array('first_name', 'last_name', 'middle_name', 'passport', 'phone'))
                 ->where('clients.city_id = ?', $city_id)
-                ->where('(DATEDIFF( `credits`.`closing_date`, NOW() ) <= 3) = 1')
+                ->where('(DATEDIFF( `credits`.`next_payment_date`, NOW() ) <= 3) = 1')
                 ->join(
                 'credits',
                 "credits.client_id = clients.id AND credits.status='active'",
                 array(
-                    'remain', 'expired' => '(DATEDIFF( `credits`.`closing_date`, NOW() ) <= 0)', 'id', 'closing_date',
-                              'diff'    => 'DATEDIFF( `credits`.`closing_date`, NOW() )'
+                    'remain', 'expired' => '(DATEDIFF( `credits`.`next_payment_date`, NOW() ) <= 0)', 'id', 'closing_date',
+                              'diff'    => 'DATEDIFF( `credits`.`next_payment_date`, NOW() )'
                 )
             );
 

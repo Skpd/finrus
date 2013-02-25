@@ -13,6 +13,7 @@
  * @property string status
  * @property int affiliate_id
  * @property int user_id
+ * @property string type
  */
 class Model_Credit extends Zend_Db_Table_Row_Abstract
 {

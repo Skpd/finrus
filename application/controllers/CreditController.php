@@ -113,7 +113,7 @@ class CreditController extends Zend_Controller_Action
                     $this->view->credit_id = $result['id'];
                     $this->view->redirect  = true;
                 } catch (Zend_Exception $e) {
-                    $form->getElement('amount')->addError($e->getMessage());
+                    $form->addError($e->getMessage());
                 }
             }
         }

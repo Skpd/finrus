@@ -6,16 +6,16 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
 
     protected $_dependentTables = array();
 
-    protected $_referenceMap    = array(
+    protected $_referenceMap = array(
         'Credit' => array(
-            'columns'           => 'credit_id',
-            'refTableClass'     => 'Model_DbTable_Credits',
-            'refColumns'        => 'id'
+            'columns'       => 'credit_id',
+            'refTableClass' => 'Model_DbTable_Credits',
+            'refColumns'    => 'id'
         ),
-        'User' => array(
-            'columns'           => 'user_id',
-            'refTableClass'     => 'Model_DbTable_Users',
-            'refColumns'        => 'id'
+        'User'   => array(
+            'columns'       => 'user_id',
+            'refTableClass' => 'Model_DbTable_Users',
+            'refColumns'    => 'id'
         ),
     );
 
@@ -49,6 +49,14 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
 
             unset($newCredit['id']);
             $newCredit['closing_date'] = date('Y-m-d', time() + strtotime($newCredit['closing_date']) - strtotime($newCredit['opening_date']));
+            $newCredit['opening_date'] = date('Y-m-d', time());
+
+            if ($newCredit['type'] == 'default') {
+                $values['next_payment_date'] = $values['closing_date'];
+            } else {
+                $values['next_payment_date'] = date('Y-m-d', strtotime('+1 week'));
+            }
+
             $newCredit['remain'] = $newCredit['amount'];
 
             $credits->insert($newCredit);
@@ -62,6 +70,7 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
             return $row;
         } catch (Exception $e) {
             $this->getAdapter()->rollBack();
+
             return false;
         }
     }
@@ -97,6 +106,20 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
             if ($credit->remain <= 0 || $forceClose) {
                 $credit->remain = 0;
                 $credit->status = Model_Credit::STATUS_SUCCESSFUL;
+            } else {
+                if ($credit->type == 'weekly') {
+                    $credit->next_payment_date = date('Y-m-d', strtotime('+1 week'));
+                } else {
+                    if ($credit->type == 'skipWeek') {
+                        $next = strtotime('+2 weeks', strtotime($credit->next_payment_date));
+
+                        if ($next > strtotime($credit->closing_date)) {
+                            $next = strtotime('+1 week', strtotime($credit->next_payment_date));
+                        }
+
+                        $credit->next_payment_date = date('Y-m-d', $next);
+                    }
+                }
             }
 
             $credit->save();
@@ -106,6 +129,7 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
             return $row;
         } catch (Exception $e) {
             $this->getAdapter()->rollBack();
+
             return false;
         }
     }

@@ -12,9 +12,12 @@
             $('.buttonset input:radio').button({disabled: true});
             $('.buttonset .ui-button').removeClass('ui-state-active');
             $('#amount').attr('disabled', true).addClass('ui-state-disabled').val('');
+            $('#duration').attr('disabled', true).addClass('ui-state-disabled').val('');
             $('#text').empty();
             $('#submit').button({disabled: true});
         }
+
+        $('#duration').select2();
 
         $('#client-id')
             .select2({
@@ -55,9 +58,25 @@
                     return;
                 }
 
-                $('.buttonset input:radio').button({disabled: false});
-                $('#submit').button({disabled: false});
-                $('#amount').removeAttr('disabled').removeClass('ui-state-disabled');
+                $.ajax({
+                    url: '<?=$this->url(array('controller' => 'credit', 'action' => 'get-active'), 'default', true)?>/id/' + id,
+                    dataType: 'json',
+                    success: function (resp) {
+                        var text = [];
+                        if ( resp.credit ) {
+                            text.push('У данного клиента уже есть активный кредит.');
+                        } else {
+                            $('.buttonset input:radio').button({disabled: false});
+                            $('#submit').button({disabled: false});
+                            $('#amount').removeAttr('disabled').removeClass('ui-state-disabled');
+                            $('#duration').removeAttr('disabled').removeClass('ui-state-disabled');
+                        }
+
+                        $('#text').html(text.join('<br />'));
+                    }
+                });
+
+
             });
 
         $('.buttonset').buttonset();
@@ -90,6 +109,11 @@
     <div class="control-group ui-helper-clearfix">
         <label class="control-label" for="amount">Сумма</label>
         <input name="amount" value="" id="amount" class="control-element ui-state-default ui-corner-all ui-state-disabled" disabled />
+    </div>
+
+    <div class="control-group ui-helper-clearfix">
+        <label class="control-label" for="duration">Длительность</label>
+        <?=$this->form->duration->renderViewHelper()?>
     </div>
 
     <div id="text" class="ui-state-active ui-widget-content" style="border: none;">

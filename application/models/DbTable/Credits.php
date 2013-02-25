@@ -7,20 +7,20 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
     protected $_rowClass = 'Model_Credit';
 
     protected $_referenceMap = array(
-        'Clients' => array(
-            'columns'           => 'client_id',
-            'refTableClass'     => 'Model_DbTable_Clients',
-            'refColumns'        => 'id'
+        'Clients'   => array(
+            'columns'       => 'client_id',
+            'refTableClass' => 'Model_DbTable_Clients',
+            'refColumns'    => 'id'
         ),
         'Affiliate' => array(
-            'columns'           => 'affiliate_id',
-            'refTableClass'     => 'Model_DbTable_Affiliates',
-            'refColumns'        => 'id'
+            'columns'       => 'affiliate_id',
+            'refTableClass' => 'Model_DbTable_Affiliates',
+            'refColumns'    => 'id'
         ),
-        'Payment' => array(
-            'columns'           => 'id',
-            'refTableClass'     => 'Model_DbTable_Payments',
-            'refColumns'        => 'credit_id'
+        'Payment'   => array(
+            'columns'       => 'id',
+            'refTableClass' => 'Model_DbTable_Payments',
+            'refColumns'    => 'credit_id'
         )
     );
 
@@ -52,7 +52,8 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
                     'opened_sum'    => 'SUM(`origin_amount`)',
                     'credit_opened' => 'COUNT(`client_id`)',
                     'date'          => 'DATE(`opening_date`)'
-                ))
+                )
+            )
                 ->where('`opening_date` <= DATE(NOW())')
                 ->where('`opening_date` >= DATE(NOW() - INTERVAL ? DAY)', $period)
                 ->group('opening_date')
@@ -68,7 +69,8 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
                     'returned_sum'    => 'SUM(`payments`.`amount`)',
                     'credit_returned' => 'COUNT(`credits`.`client_id`)',
                     'date'            => 'DATE(`payments`.`date`)'
-                ))
+                )
+            )
                 ->where('`payments`.`date` >= DATE(NOW() - INTERVAL ? DAY)', $period)
                 ->joinLeft('credits', 'payments.credit_id = credits.id', array('client_id'))
                 ->group('DATE(date)')
@@ -123,6 +125,18 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
             $values['opening_date'] = date('Y-m-d', time());
         }
 
+        if (!is_numeric($values['opening_date'])) {
+            $values['opening_date'] = strtotime($values['opening_date']);
+        }
+
+        $values['closing_date'] = time() + (60 * 60 * 24 * $values['duration']);
+
+        if (isset($values['closing_date'])) {
+            if (!is_numeric($values['closing_date'])) {
+                $values['closing_date'] = strtotime($values['closing_date']);
+            }
+        }
+
         $isFirstCredit   = true;
         $isTrustedClient = false;
 
@@ -151,107 +165,131 @@ class Model_DbTable_Credits extends Zend_Db_Table_Abstract
 
         $values['amount'] = 0;
 
-        if ($isFirstCredit) {
-            if ($values['origin_amount'] <= 5000) {
-                switch ($values['duration']) {
-                    case 7:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.09;
-                        break;
-                    case 14:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.18;
-                        break;
-                    case 21:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.27;
-                        break;
-                    case 30:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.32;
-                        break;
+        switch ($values['type']) {
+            case 'weekly':
+            case 'skipWeek':
+                $values['next_payment_date'] = strtotime('+1 week', $values['opening_date']);
 
-                    default:
-                        break;
+                if ($values['origin_amount'] <= 3000) {
+                    if ($values['duration'] == 30) {
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.32 * $values['duration'] / 30;
+                    }
+                } else if ($values['origin_amount'] <= 7000) {
+                    if ($values['duration'] <= 90 && $values['duration'] > 30) {
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.30 * $values['duration'] / 30;
+                    }
+                } else if ($values['origin_amount'] <= 20000) {
+                    if ($values['duration'] <= 180 && $values['duration'] > 30) {
+                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.27 * $values['duration'] / 30;
+                    }
                 }
-            }
-        } else {
-            if ($values['origin_amount'] <= 5000) {
-                switch ($values['duration']) {
-                    case 7:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.08;
-                        break;
-                    case 14:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.16;
-                        break;
-                    case 21:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.22;
-                        break;
-                    case 30:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.30;
-                        break;
+                break;
 
-                    default:
-                        break;
-                }
-            } else if ($values['origin_amount'] <= 10000) {
-                switch ($values['duration']) {
-                    case 7:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.07;
-                        break;
-                    case 14:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.15;
-                        break;
-                    case 21:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.20;
-                        break;
-                    case 30:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.27;
-                        break;
 
-                    default:
-                        break;
+            case 'default':
+            default:
+                $values['next_payment_date'] = $values['closing_date'];
+
+                if ($isFirstCredit) {
+                    if ($values['origin_amount'] <= 5000) {
+                        switch ($values['duration']) {
+                            case 7:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.09;
+                                break;
+                            case 14:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.18;
+                                break;
+                            case 21:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.27;
+                                break;
+                            case 30:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.32;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                } else {
+                    if ($values['origin_amount'] <= 5000) {
+                        switch ($values['duration']) {
+                            case 7:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.08;
+                                break;
+                            case 14:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.16;
+                                break;
+                            case 21:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.22;
+                                break;
+                            case 30:
+                                $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.30;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    } else {
+                        if ($values['origin_amount'] <= 10000) {
+                            switch ($values['duration']) {
+                                case 7:
+                                    $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.07;
+                                    break;
+                                case 14:
+                                    $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.15;
+                                    break;
+                                case 21:
+                                    $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.20;
+                                    break;
+                                case 30:
+                                    $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.27;
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        } else {
+                            if ($values['origin_amount'] <= 20000 && $isTrustedClient) {
+                                switch ($values['duration']) {
+                                    case 7:
+                                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.06;
+                                        break;
+                                    case 14:
+                                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.08;
+                                        break;
+                                    case 21:
+                                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.105;
+                                        break;
+                                    case 30:
+                                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.15;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
                 }
-            } else if ($values['origin_amount'] <= 20000 && $isTrustedClient) {
-                switch ($values['duration']) {
-                    case 7:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.06;
-                        break;
-                    case 14:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.08;
-                        break;
-                    case 21:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.105;
-                        break;
-                    case 30:
-                        $values['amount'] = $values['origin_amount'] + $values['origin_amount'] * 0.15;
-                        break;
-                    default:
-                        break;
-                }
-            }
+                break;
         }
+
+        $values['closing_date'] = date('Y-m-d', $values['closing_date']);
+        $values['opening_date'] = date('Y-m-d', $values['opening_date']);
+        $values['next_payment_date'] = date('Y-m-d', $values['next_payment_date']);
 
         if (empty($values['amount'])) {
-            throw new Zend_Exception('Сумма указана неверно.');
-        }
-
-        $values['closing_date'] = time() + (60 * 60 * 24 * $values['duration']);
-
-        if (isset($values['closing_date'])) {
-            if (!is_numeric($values['closing_date'])) {
-                $values['closing_date'] = strtotime($values['closing_date']);
-            }
-
-            $values['closing_date'] = date('Y-m-d', $values['closing_date']);
+            throw new Zend_Exception('Сумма или длительность указана неверно.');
         }
 
         if (!isset($values['remain'])) {
             $values['remain'] = $values['amount'];
         }
 
-        $users = new Model_DbTable_Users();
+        $users                  = new Model_DbTable_Users();
         $values['affiliate_id'] = $users->find(Zend_Auth::getInstance()->getStorage()->read()->id)
             ->current()
             ->findParentRow('Model_DbTable_Affiliates')
-            ->id
-        ;
+            ->id;
 
         $row = $this->createRow($values);
 
