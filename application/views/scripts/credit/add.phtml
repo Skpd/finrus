@@ -1,19 +1,103 @@
-<script type="text/javascript">
-$(document).ready(function(){
-    $('#client_id').flexbox('<?=$this->baseUrl()?>/search/client', {
-        method: 'POST',
-        contentClass: 'fbcontent',
-        showArrow: false
-    });
-    <? if (!empty($this->redirect)): ?>
+<?
+/* @var $this Zend_View */
+?>
 
+<? $this->headLink()->appendStylesheet($this->baseUrl('css/select2.css')) ?>
+<? $this->headScript()->appendFile($this->baseUrl('js/select2.js')) ?>
+<? $this->headScript()->appendFile($this->baseUrl('js/select2_locale_ru.js')) ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function clearAll() {
+            $('.buttonset input:radio').button({disabled: true});
+            $('.buttonset .ui-button').removeClass('ui-state-active');
+            $('#amount').attr('disabled', true).addClass('ui-state-disabled').val('');
+            $('#text').empty();
+            $('#submit').button({disabled: true});
+        }
+
+        $('#client-id')
+            .select2({
+                allowClear: true,
+                placeholder: "Поиск клиента",
+                minimumInputLength: 1,
+                ajax: {
+                    url: "<?=$this->baseUrl('search/client')?>",
+                    dataType: 'json',
+                    data: function (term, page) {
+                        return {
+                            q: term,
+                            field: 'client'
+                        };
+                    },
+                    results: function (data, page) {
+                        return data;
+                    }
+                },
+                formatResult: function (result) {
+                    return "<table class='default-table'>" +
+                        "<thead><tr><th colspan='2' class='ui-widget-header'>" + result.name + "</th></tr></thead>" +
+                        "<tbody>" +
+                        "<tr><td align='left'>" + result.passport + "</td><td align='right'>" + result.phone + "</td></tr>" +
+                        "<tr><td colspan='2'>" + result.address + "</td></tr>" +
+                        "</tbody>" +
+                        "</table";
+                },
+                formatSelection: function (result) {
+                    return result.name;
+                }
+            })
+            .change(function () {
+                clearAll();
+
+                var id = parseInt($(this).val(), 10);
+                if ( !id ) {
+                    return;
+                }
+
+                $('.buttonset input:radio').button({disabled: false});
+                $('#submit').button({disabled: false});
+                $('#amount').removeAttr('disabled').removeClass('ui-state-disabled');
+            });
+
+        $('.buttonset').buttonset();
+
+        $('#submit, #cancel').button();
+
+    <? if (!empty($this->redirect)): ?>
         window.open('<?=$this->url(array('controller' => 'credit', 'action' => 'print', 'id' => $this->credit_id), 'default', true)?>', 'paymentPrint');
         window.open('<?=$this->url(array('controller' => 'credit', 'action' => 'agreement', 'id' => $this->credit_id), 'default', true)?>', 'agreementPrint');
-
         document.location.href = '<?=$this->url(array('controller' => 'index', 'action' => 'index'), 'default', true)?>';
-
-    <? endif; ?>
-});
+        <? endif; ?>
+    });
 </script>
-<div>Клиент:</div>
-<?=$this->form?>
+<form action="" method="post" class="controls" style="width: 720px;">
+    <div class="control-group ui-helper-clearfix">
+        <label for="client-id" class="control-label">Клиент</label>
+        <input type="text" id="client-id" name="client_id" class="control-element" />
+    </div>
+
+    <div class="control-group ui-helper-clearfix">
+        <label class="control-label">Продукт</label>
+
+        <div class="buttonset control-element">
+            <label for="type-default">Стандарт</label> <input id="type-default" type="radio" name="type" value="default" disabled />
+            <label for="type-weekly">Недельная выплата</label> <input id="type-weekly" type="radio" name="type" value="weekly" disabled />
+            <label for="type-skipWeek">Выплата через неделю</label> <input id="type-skipWeek" type="radio" name="type" value="skipWeek" disabled />
+        </div>
+    </div>
+
+    <div class="control-group ui-helper-clearfix">
+        <label class="control-label" for="amount">Сумма</label>
+        <input name="amount" value="" id="amount" class="control-element ui-state-default ui-corner-all ui-state-disabled" disabled />
+    </div>
+
+    <div id="text" class="ui-state-active ui-widget-content" style="border: none;">
+        <?=implode(' ', $this->form->getMessages());?>
+    </div>
+
+    <div class="control-group ui-helper-clearfix center">
+        <input id="submit" type="submit" name="submit" value="Готово" disabled />
+        <input id="cancel" type="submit" name="cancel" value="Отмена" />
+    </div>
+</form>
