@@ -52,9 +52,21 @@ class CreditController extends Zend_Controller_Action
 
         $values['page'] = empty($values['page']) ? 1 : intval($values['page']);
 
-        $select->join('clients', "credits.client_id = clients.id", array(
-            'first_name', 'last_name', 'middle_name', 'client_id' => 'id'
-        ));
+        $select->join(
+            'clients',
+            "credits.client_id = clients.id",
+            array(
+                'first_name', 'last_name', 'middle_name', 'client_id' => 'id'
+            )
+        );
+
+        $select->joinLeft(
+            'users',
+            "credits.user_id = users.id",
+            array(
+                'login'
+            )
+        );
 
         $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
 
@@ -73,10 +85,12 @@ class CreditController extends Zend_Controller_Action
 
         $credits = new Model_DbTable_Credits();
 
-        $credit = $credits->fetchAll(array(
-            'client_id = ?' => $client_id,
-            'status != ?'   => 'successfull'
-        ))->toArray();
+        $credit = $credits->fetchAll(
+            array(
+                'client_id = ?' => $client_id,
+                'status != ?'   => 'successfull'
+            )
+        )->toArray();
 
         $this->view->credit = $credit;
     }
@@ -90,6 +104,7 @@ class CreditController extends Zend_Controller_Action
                 $this->_helper->redirector()
                     ->setPrependBase(false)
                     ->gotoSimple($this->_helper->url('index', 'credit', 'default'));
+
                 return;
             }
 
@@ -123,6 +138,7 @@ class CreditController extends Zend_Controller_Action
         }
 
         $this->_forward('index', 'index');
+
         return;
     }
 
@@ -143,6 +159,7 @@ class CreditController extends Zend_Controller_Action
             $this->getHelper('layout')->disableLayout();
         } else {
             $this->_forward('list');
+
             return;
         }
     }
@@ -231,6 +248,7 @@ class CreditController extends Zend_Controller_Action
 
         } else {
             $this->_forward('list');
+
             return;
         }
     }

@@ -12,6 +12,7 @@
  * @property datetime closing_date
  * @property string status
  * @property int affiliate_id
+ * @property int user_id
  */
 class Model_Credit extends Zend_Db_Table_Row_Abstract
 {
@@ -52,5 +53,12 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
     public function getPaymentsDaysAgo($days)
     {
         return $this->findDependentRowset('Model_DbTable_Payments', null, $this->select()->where('date >= DATE(NOW() - INTERVAL ? DAY)', $days));
+    }
+
+    protected function _insert()
+    {
+        if (empty($this->user_id)) {
+            $this->user_id = Zend_Auth::getInstance()->getStorage()->read()->id;
+        }
     }
 }
