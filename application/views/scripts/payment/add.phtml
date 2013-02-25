@@ -105,9 +105,9 @@
         $('#submit, #cancel').button();
 
     <? if (!empty($this->redirect)): ?>
-<!--        window.open('--><?//=$this->url(array('controller' => 'payment', 'action' => 'print', 'id' => $this->payment_id), 'default', true)?><!--', 'paymentPrint');-->
-<!--        document.location.href = '--><?//=$this->url(array('controller' => 'index', 'action' => 'index'), 'default', true)?><!--';-->
-        <? endif; ?>
+        window.open('<?=$this->url(array('controller' => 'payment', 'action' => 'print', 'id' => $this->payment_id), 'default', true)?>', 'paymentPrint');
+        document.location.href = '<?=$this->url(array('controller' => 'index', 'action' => 'index'), 'default', true)?>';
+    <? endif; ?>
     });
 </script>
 
