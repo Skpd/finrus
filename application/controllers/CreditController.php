@@ -81,18 +81,15 @@ class CreditController extends Zend_Controller_Action
     {
         $this->view->clearVars();
 
-        $client_id = $this->_request->getParam('id', 0);
+        $clientId = $this->_request->getParam('id', 0);
 
         $credits = new Model_DbTable_Credits();
-
-        $credit = $credits->fetchAll(
-            array(
-                'client_id = ?' => $client_id,
-                'status != ?'   => 'successfull'
-            )
-        )->toArray();
-
-        $this->view->credit = $credit;
+        try {
+            $credit  = $credits->getActive($clientId);
+            $this->view->credit = $credit->toArray();
+        } catch (Exception $e) {
+            $this->view->credit = null;
+        }
     }
 
     public function addAction()

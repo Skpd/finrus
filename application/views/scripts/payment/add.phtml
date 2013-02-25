@@ -61,20 +61,19 @@
                     dataType: 'json',
                     success: function (resp) {
                         var text = [];
-                        if ( resp.credit.length > 0 ) {
+                        if ( resp.credit ) {
                             $('.buttonset input:radio').button({disabled: false});
                             $('#submit').button({disabled: false});
                             $('#amount').removeAttr('disabled').removeClass('ui-state-disabled');
 
                             var remain = 0, origin = 0;
 
-                            for ( var i = 0; i < resp.credit.length; i++ ) {
-                                text.push(
-                                    'Дата открытия: ' + resp.credit[i].opening_date.split(' ')[0] + '. Остаток ' + resp.credit[i].remain + ' руб.'
-                                );
-                                remain += parseFloat(resp.credit[i].remain);
-                                origin += parseFloat(resp.credit[i].origin_amount);
-                            }
+                            text.push(
+                                'Дата открытия: ' + resp.credit.opening_date.split(' ')[0] + '. Остаток ' + resp.credit.remain + ' руб.'
+                            );
+
+                            remain += parseFloat(resp.credit.remain);
+                            origin += parseFloat(resp.credit.origin_amount);
 
                             $('#amount').data('origin', origin).data('remain', remain);
 
