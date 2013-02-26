@@ -9,9 +9,9 @@
             <th class="ui-widget-header sortable" field="remain">Остаток</th>
             <!--
             <th class="ui-widget-header">Last Payment</th>
-            <th class="ui-widget-header">Next Payment</th>
             -->
             <th class="ui-widget-header sortable" field="opening_date">Открытие</th>
+            <th class="ui-widget-header sortable" field="next_payment_date"">След. Платеж</th>
             <th class="ui-widget-header">Закрытие</th>
             <th class="ui-widget-header">Статус</th>
             <th class="ui-widget-header">Оператор</th>
@@ -38,9 +38,9 @@
                     <td class="ui-widget-content"><?=$value['remain']?></td>
                     <!--
                     <td class="ui-widget-content"><?=$value['last_payment_date']?></td>
-                    <td class="ui-widget-content"><?=$value['next_payment_date']?></td>
                     -->
                     <td class="ui-widget-content"><?=$value['opening_date']?></td>
+                    <td class="ui-widget-content"><?=$value['next_payment_date']?></td>
                     <td class="ui-widget-content"><?=$value['closing_date']?></td>
                     <td class="ui-widget-content">
                         <? if ($value['status'] == Model_Credit::STATUS_ACTIVE): ?>
