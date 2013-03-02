@@ -8,19 +8,19 @@
             <th class="ui-widget-header sortable" field="amount">Сумма</th>
             <th class="ui-widget-header sortable" field="remain">Остаток</th>
             <!--
-            <th class="ui-widget-header">Остаток</th>
             <th class="ui-widget-header">Last Payment</th>
-            <th class="ui-widget-header">Next Payment</th>
             -->
             <th class="ui-widget-header sortable" field="opening_date">Открытие</th>
+            <th class="ui-widget-header sortable" field="next_payment_date"">След. Платеж</th>
             <th class="ui-widget-header">Закрытие</th>
             <th class="ui-widget-header">Статус</th>
+            <th class="ui-widget-header">Оператор</th>
             <th class="ui-widget-header">Действия</th>
         </tr>
     </thead>
     <tfoot>
         <tr>
-            <td colspan="8" class="ui-widget-content">
+            <td colspan="9" class="ui-widget-content">
                 <?=$this->paginationControl($this->data,
                     'Sliding',
                     'paging.phtml');
@@ -38,19 +38,20 @@
                     <td class="ui-widget-content"><?=$value['remain']?></td>
                     <!--
                     <td class="ui-widget-content"><?=$value['last_payment_date']?></td>
-                    <td class="ui-widget-content"><?=$value['next_payment_date']?></td>
                     -->
                     <td class="ui-widget-content"><?=$value['opening_date']?></td>
+                    <td class="ui-widget-content"><?=$value['next_payment_date']?></td>
                     <td class="ui-widget-content"><?=$value['closing_date']?></td>
                     <td class="ui-widget-content">
-                        <? if ($value['status'] == 'active'): ?>
+                        <? if ($value['status'] == Model_Credit::STATUS_ACTIVE): ?>
                             Активен
-                        <? elseif ($value['status'] == 'failed'): ?>
+                        <? elseif ($value['status'] == Model_Credit::STATUS_FAILED): ?>
                             Просрочен
-                        <? elseif ($value['status'] == 'successfull'): ?>
+                        <? elseif ($value['status'] == Model_Credit::STATUS_SUCCESSFUL): ?>
                             Погашен
                         <? endif; ?>
                     </td>
+                    <td class="ui-widget-content"><?=$value['login']?></td>
                     <td class="ui-widget-content">
                         Скачать <a href="<?=$this->url(array('controller' => 'credit', 'action' => 'agreement', 'id' => $value['id']), 'default', true)?>">Договор</a>
                         <a href="<?=$this->url(array('controller' => 'credit', 'action' => 'print', 'id' => $value['id']), 'default', true)?>">Чек</a>

@@ -391,7 +391,6 @@ class Zend_Pdf_Parser
         }
 
         $pdfVersionComment = $this->_stringParser->readComment();
-
         if (substr($pdfVersionComment, 0, 5) != '%PDF-') {
             require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('File is not a PDF.');

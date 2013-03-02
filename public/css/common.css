@@ -164,3 +164,29 @@ ul.navigation li a {
 .ffb {
     margin-top: 10px;
 }
+
+.ui-buttonset .ui-button {
+    margin-right: -.4em;
+}
+
+.controls {
+    width: 100%;
+}
+
+.control-group {
+    padding: 10px 0;
+}
+
+.control-group .control-label {
+    float: left;
+    width: 15%;
+}
+
+.control-group .control-element {
+    float: left;
+    width: 80%;
+    margin: 0;
+    padding: 0;
+    min-height: 24px;
+}
+

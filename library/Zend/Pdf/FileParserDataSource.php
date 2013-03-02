@@ -75,7 +75,7 @@ abstract class Zend_Pdf_FileParserDataSource
      *
      * @throws Zend_Pdf_Exception
      */
-    abstract public function __construct();
+    abstract public function __construct($filePath);
 
     /**
      * Object destructor. Closes the data source.
