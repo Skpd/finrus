@@ -68,7 +68,7 @@ abstract class Zend_Controller_Action implements Zend_Controller_Action_Interfac
 
     /**
      * Zend_Controller_Request_Abstract object wrapping the request environment
-     * @var Zend_Controller_Request_Abstract
+     * @var Zend_Controller_Request_Http
      */
     protected $_request = null;
 

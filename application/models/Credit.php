@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * @property int id
+ * @property int client_id
+ * @property int amount
+ * @property int origin_amount
+ * @property int remain
+ * @property datetime last_payment_date
+ * @property datetime next_payment_date
+ * @property datetime opening_date
+ * @property datetime closing_date
+ * @property string status
+ * @property int affiliate_id
+ * @property int user_id
+ * @property string type
+ */
 class Model_Credit extends Zend_Db_Table_Row_Abstract
 {
     const STATUS_SUCCESSFUL = 'successfull';
@@ -36,8 +51,38 @@ class Model_Credit extends Zend_Db_Table_Row_Abstract
         }
     }
 
+    public function getNextPaymentDate($time)
+    {
+        $next = $this->next_payment_date;
+
+        if ($this->type == 'weekly') {
+            $next = date('Y-m-d', strtotime('+1 week', $time));
+        } else if ($this->type == 'skipWeek') {
+            if ($this->opening_date == date('Y-m-d', $time)) {
+                $next = date('Y-m-d', strtotime('+1 week', $time));
+            } else {
+                $next = strtotime('+2 weeks', $time);
+
+                if ($next > strtotime($this->closing_date)) {
+                    $next = strtotime('+1 week', $time);
+                }
+
+                $next = date('Y-m-d', $next);
+            }
+        }
+
+        return $next;
+    }
+
     public function getPaymentsDaysAgo($days)
     {
         return $this->findDependentRowset('Model_DbTable_Payments', null, $this->select()->where('date >= DATE(NOW() - INTERVAL ? DAY)', $days));
+    }
+
+    protected function _insert()
+    {
+        if (empty($this->user_id)) {
+            $this->user_id = Zend_Auth::getInstance()->getStorage()->read()->id;
+        }
     }
 }

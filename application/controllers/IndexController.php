@@ -14,6 +14,11 @@ class IndexController extends Zend_Controller_Action
             ->initContext('json');
     }
 
+    public function exbicoAction()
+    {
+
+    }
+
     public function reportAction()
     {
         $period = $this->_request->getParam('period', 7);
@@ -26,29 +31,30 @@ class IndexController extends Zend_Controller_Action
 
         $this->view->data = $credits->getReport($period);
     }
-    
+
     public function indexAction()
     {
         if (Zend_Auth::getInstance()->hasIdentity()) {
-            $users = new Model_DbTable_Users();
+            $users   = new Model_DbTable_Users();
             $city_id = $users->find(Zend_Auth::getInstance()->getStorage()->read()->id)
                 ->current()
                 ->findParentRow('Model_DbTable_Affiliates')
                 ->findParentRow('Model_DbTable_Cities')
-                ->id
-            ;
+                ->id;
 
             $select = new Zend_Db_Select(Zend_Db_Table::getDefaultAdapter());
 
             $res = $select->from('clients', array('first_name', 'last_name', 'middle_name', 'passport', 'phone'))
                 ->where('clients.city_id = ?', $city_id)
-                ->where('(DATEDIFF( `credits`.`closing_date`, NOW() ) <= 3) = 1')
+                ->where('(DATEDIFF( `credits`.`next_payment_date`, NOW() ) <= 3) = 1')
                 ->join(
-                    'credits',
-                    "credits.client_id = clients.id AND credits.status='active'",
-                    array('remain', 'expired' => '(DATEDIFF( `credits`.`closing_date`, NOW() ) <= 0)', 'id', 'closing_date', 'diff' => 'DATEDIFF( `credits`.`closing_date`, NOW() )')
+                'credits',
+                "credits.client_id = clients.id AND credits.status='active'",
+                array(
+                    'remain', 'expired' => '(DATEDIFF( `credits`.`next_payment_date`, NOW() ) <= 0)', 'id', 'closing_date',
+                              'diff'    => 'DATEDIFF( `credits`.`next_payment_date`, NOW() )'
                 )
-            ;
+            );
 
             $res = $res->query()->fetchAll();
 
@@ -127,19 +133,23 @@ class IndexController extends Zend_Controller_Action
         if (!empty($field)) {
             switch ($field) {
                 case 'client':
-                    $table = new Model_DbTable_Clients();
+                    $table  = new Model_DbTable_Clients();
                     $select = $table->select()
                         ->where("first_name LIKE '%" . $value . "%'")
                         ->orWhere("last_name LIKE '%" . $value . "%'")
                         ->orWhere("middle_name LIKE '%" . $value . "%'")
                         ->orWhere("passport LIKE '%" . $value . "%'");
+
                     $res = $table->fetchAll($select);
 
                     if (!empty($res)) {
                         foreach ($res as $row) {
                             $result[] = array(
-                                'id'   => $row['id'],
-                                'name' => $row['last_name'] . ' ' . $row['first_name'] . ' ' . $row['middle_name']
+                                'id'       => $row['id'],
+                                'name'     => $row['last_name'] . ' ' . $row['first_name'] . ' ' . $row['middle_name'],
+                                'passport' => $row['passport'],
+                                'phone'    => $row['phone'],
+                                'address'  => $row['address']
                             );
                         }
                     }

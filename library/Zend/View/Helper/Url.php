@@ -30,6 +30,7 @@ require_once 'Zend/View/Helper/Abstract.php';
  * @subpackage Helper
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @method __toString
  */
 class Zend_View_Helper_Url extends Zend_View_Helper_Abstract
 {

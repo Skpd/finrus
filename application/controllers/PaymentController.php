@@ -45,7 +45,7 @@ class PaymentController extends Zend_Controller_Action
         $paginator->setItemCountPerPage(intval($values['limit']));
         $paginator->setCurrentPageNumber(intval($values['page']));
 
-        $this->view->data = $paginator;
+        $this->view->data       = $paginator;
         $this->view->searchForm = $searchForm;
     }
 
@@ -56,21 +56,40 @@ class PaymentController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             if ($this->_request->getPost('cancel')) {
                 $this->_helper->redirector()
-                        ->setPrependBase(false)
-                        ->gotoSimple($this->_helper->url('index', 'payment', 'default'));
+                    ->setPrependBase(false)
+                    ->gotoSimple($this->_helper->url('index', 'payment', 'default'));
+
                 return;
             }
 
             if ($form->isValid($this->_request->getPost())) {
-                $table  = new Model_DbTable_Payments();
-                $result = $table->create($form->getValues());
+                $values   = $form->getValues();
+                $result   = false;
+                $payments = new Model_DbTable_Payments();
+
+                switch ($values['type']) {
+                    case 'payment':
+                        $result = $payments->create($values);
+                        break;
+
+                    case 'reopen':
+                        $result = $payments->reopen($values);
+                        break;
+
+                    case 'other':
+                        $result = $payments->create($values, true);
+                        break;
+
+                    default:
+                        $form->addError('Не указан тип платежа.');
+                        break;
+                }
 
                 if ($result !== false) {
                     $this->view->payment_id = $result['id'];
-                    $this->view->redirect = true;
+                    $this->view->redirect   = true;
                 } else {
-                    Zend_Debug::dump($result);
-                    $form->getElement('client_id')->addError('Активный кредит не найден.');
+                    $form->addError('Ошибка при совершении платежа.');
                 }
             }
         }
@@ -104,6 +123,7 @@ class PaymentController extends Zend_Controller_Action
 
         } else {
             $this->_forward('list');
+
             return;
         }
     }
