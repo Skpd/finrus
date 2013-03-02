@@ -168,11 +168,12 @@ class CreditController extends Zend_Controller_Action
         $table = new Model_DbTable_Credits();
 
         $credit = $table->find($id)->current();
+        /* @var $credit = Model_Credit */
 
         if (!empty($credit)) {
             $client = $credit->findParentRow('Model_DbTable_Clients');
 
-            $fname = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'agreement.pdf';
+            $fname = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'agr_new.pdf';
 
             $pdf  = new Zend_Pdf(file_get_contents($fname));
             $font = Zend_Pdf_Font::fontWithPath(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'templates/times.ttf');
@@ -224,17 +225,43 @@ class CreditController extends Zend_Controller_Action
             $page->drawText(strftime('%B', $ts), 395, 713);
             $page->drawText(substr(date('y', $ts), 1), 466, 713);
 
-            $page->drawText(date('Y-m-d', strtotime($credit['closing_date'])), 53, 610);
-            $page->drawText($credit['origin_amount'], 183, 610);
-            $page->drawText(date('Y-m-d', strtotime($credit['opening_date'])), 283, 610);
-            $page->drawText($credit['amount'], 420, 610);
+            $time  = strtotime($credit['opening_date']);
+            $close = strtotime($credit['closing_date']);
+            $dates = array();
+            $pos = 633;
 
-            $page->drawText($credit['id'], 283, 526);
+            while ($time < $close) {
+                $time = strtotime($credit->getNextPaymentDate($time));
+                $dates[] = date('Y-m-d', $time);
+            }
 
-            $page->drawText($client['passport'], 120, 287);
+            $payment = round($credit['amount'] / sizeof($dates));
+            $remain  = $credit['amount'];
 
-            $page->drawText($client['address'], 170, 267, 'UTF-8');
-            $page->drawText($client['address'], 170, 247, 'UTF-8');
+            foreach ($dates as $k => $date) {
+                $remain -= $payment;
+
+                if ($k + 1 == sizeof($dates)) {
+                    $payment += $remain;
+                    $remain = 0;
+                }
+
+                $page->drawText($date, 100, $pos);
+                $page->drawText($payment, 300, $pos);
+                $page->drawText($remain, 470, $pos);
+
+                $pos -= 14.3;
+            }
+
+            $page->drawText($credit['id'], 295, 92);
+
+            $page = $pdf->pages[4];
+            $page->setFont($font, 12);
+
+            $page->drawText($client['passport'], 120, 593);
+
+            $page->drawText($client['address'], 170, 573, 'UTF-8');
+            $page->drawText($client['address'], 170, 553, 'UTF-8');
 
             $this->_response->setHeader('content-type', 'application/pdf');
 

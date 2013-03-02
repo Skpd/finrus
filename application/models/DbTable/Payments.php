@@ -107,19 +107,7 @@ class Model_DbTable_Payments extends Zend_Db_Table_Abstract
                 $credit->remain = 0;
                 $credit->status = Model_Credit::STATUS_SUCCESSFUL;
             } else {
-                if ($credit->type == 'weekly') {
-                    $credit->next_payment_date = date('Y-m-d', strtotime('+1 week'));
-                } else {
-                    if ($credit->type == 'skipWeek') {
-                        $next = strtotime('+2 weeks', strtotime($credit->next_payment_date));
-
-                        if ($next > strtotime($credit->closing_date)) {
-                            $next = strtotime('+1 week', strtotime($credit->next_payment_date));
-                        }
-
-                        $credit->next_payment_date = date('Y-m-d', $next);
-                    }
-                }
+                $credit->next_payment_date = $credit->getNextPaymentDate(time());
             }
 
             $credit->save();
